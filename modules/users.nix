@@ -5,8 +5,7 @@
     isNormalUser = true;
     extraGroups = [ "wheel" "podman" ];
     openssh.authorizedKeys.keys = [
-      # TODO: add your SSH public key
-      # "ssh-ed25519 AAAA..."
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ65MRiriewaqb7UjXy9VCFizBq9V/ZBeloByaLhSV0M dev@zico.xyz"
     ];
     shell = pkgs.zsh;
   };
@@ -17,7 +16,7 @@
     home.stateVersion = "25.05";
     programs.git = {
       enable = true;
-      userName = "Nico Zamora";
+      userName = "Nicolae";
       userEmail = "stperc@users.noreply.github.com";
     };
   };
