@@ -1,0 +1,15 @@
+# sops-nix configuration
+# To set up:
+# 1. Generate age key from host SSH key:
+#    nix-shell -p ssh-to-age --run 'cat /etc/ssh/ssh_host_ed25519_key.pub | ssh-to-age'
+# 2. Add the age public key below
+# 3. Create encrypted secrets: sops secrets/zebes.yaml
+
+keys:
+  - &zebes age1_REPLACE_WITH_ZEBES_AGE_PUBLIC_KEY
+
+creation_rules:
+  - path_regex: secrets/zebes\.yaml$
+    key_groups:
+      - age:
+          - *zebes

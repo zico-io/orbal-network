@@ -1,0 +1,47 @@
+{
+  description = "zebes — NixOS homelab fleet";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+
+    home-manager = {
+      url = "github:nix-community/home-manager/release-25.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs = { self, nixpkgs, home-manager, sops-nix, ... }@inputs:
+    let
+      system = "x86_64-linux";
+
+      mkHost = hostname: nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = { inherit inputs; };
+        modules = [
+          ./hosts/${hostname}
+          ./modules/base.nix
+          ./modules/users.nix
+          sops-nix.nixosModules.sops
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            networking.hostName = hostname;
+          }
+        ];
+      };
+    in
+    {
+      nixosConfigurations = {
+        zebes = mkHost "zebes";
+        # elitedesk-1 = mkHost "elitedesk-1";
+        # elitedesk-2 = mkHost "elitedesk-2";
+        # elitedesk-3 = mkHost "elitedesk-3";
+      };
+    };
+}
