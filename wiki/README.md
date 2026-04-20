@@ -14,6 +14,7 @@
 - [Podman Containers](services/podman.md)
 
 ## Runbooks
+- [First Deploy](runbooks/first-deploy.md)
 - [Adding a New Host](runbooks/new-host.md)
 - [Rebuilding / Deploying](runbooks/rebuild.md)
 - [Disaster Recovery](runbooks/disaster-recovery.md)
