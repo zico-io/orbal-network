@@ -31,6 +31,7 @@
           ./hosts/${hostname}
           ./modules/base.nix
           ./modules/users.nix
+          ./modules/dev.nix
           sops-nix.nixosModules.sops
           disko.nixosModules.disko
           home-manager.nixosModules.home-manager

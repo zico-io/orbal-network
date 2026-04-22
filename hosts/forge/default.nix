@@ -15,19 +15,15 @@
 
   zebes.vm-guest.enable = true;
 
+  zebes.dev = {
+    enable = true;
+    languages.node.enable = true;
+    languages.go.enable = true;
+    languages.rust.enable = true;
+    languages.python.enable = true;
+  };
+
   networking.firewall.allowedTCPPorts = [
     22 # SSH (already open via base, explicit for clarity)
   ];
-
-  environment.systemPackages = with pkgs; [
-    direnv
-    nix-direnv
-    gcc
-    gnumake
-    ripgrep
-    fd
-    unzip
-  ];
-
-  programs.direnv.enable = true;
 }
