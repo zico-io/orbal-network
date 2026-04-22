@@ -25,6 +25,9 @@
     jq
   ];
 
+  services.tailscale.enable = true;
+  networking.firewall.trustedInterfaces = [ "tailscale0" ];
+
   services.openssh = {
     enable = true;
     settings = {
