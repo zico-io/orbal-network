@@ -44,7 +44,6 @@
     in
     {
       nixosConfigurations = {
-        zebes = mkHost "zebes";
         forge = mkHost "forge";
         seed = mkHost "seed";
         # elitedesk-1 = mkHost "elitedesk-1";

@@ -5,12 +5,9 @@
 - [Network Topology](network-topology.md)
 
 ## Hardware
-- [zebes server](hardware/zebes.md)
 - [HP Elitedesk cluster](hardware/elitedesk.md)
 
 ## Services
-- [Plex](services/plex.md)
-- [*arr Suite](services/arr-suite.md)
 - [Podman Containers](services/podman.md)
 
 ## Runbooks
@@ -24,4 +21,3 @@
 ## Decision Log
 - [001: Podman over Docker](decisions/001-podman-over-docker.md)
 - [002: Flake Structure](decisions/002-flake-structure.md)
-- [003: *arr as Containers vs Native](decisions/003-arr-containers-vs-native.md)

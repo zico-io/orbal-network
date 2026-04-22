@@ -4,13 +4,13 @@
 
 The zebes homelab is a fleet of NixOS machines managed declaratively via a single flake.
 
-**zebes** is the primary node — a headless server running the media stack (Plex + *arr suite) in Podman containers. All services are defined as NixOS modules and deployed with `nixos-rebuild switch --flake`.
+**forge** is a dev VM running on TrueNAS Scale (mother-brain). **seed** is a Hetzner Robot dedicated server (2x NVMe RAID1). Both are managed as NixOS configurations in this flake.
 
 Three **HP Elitedesk** mini-PCs currently run Proxmox. The long-term plan is bare-metal NixOS on all three, joining this flake as additional hosts.
 
 ## Network
 
-Networking is handled by the Unifi stack (not managed by Nix). See [Network Topology](network-topology.md) for details.
+Networking is handled by the Unifi stack (not managed by Nix). Tailscale is enabled fleet-wide for mesh connectivity. See [Network Topology](network-topology.md) for details.
 
 ## Secrets
 

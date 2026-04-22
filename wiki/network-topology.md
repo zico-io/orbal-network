@@ -8,7 +8,8 @@ All networking is managed by the Unifi stack. NixOS hosts are consumers, not con
 
 | Host | IP | Role |
 |------|-----|------|
-| zebes | TBD | Main server |
+| forge | 192.168.12.205 | Dev VM on TrueNAS (mother-brain) |
+| seed | 46.62.190.233 | Hetzner dedicated server |
 | elitedesk-1 | TBD | Compute node |
 | elitedesk-2 | TBD | Compute node |
 | elitedesk-3 | TBD | Compute node |
@@ -25,7 +26,4 @@ TBD — document local DNS setup.
 
 | Port | Service | Host |
 |------|---------|------|
-| 32400 | Plex | zebes |
-| 8989 | Sonarr | zebes |
-| 7878 | Radarr | zebes |
-| 9696 | Prowlarr | zebes |
+| 22 | SSH | forge, seed |
