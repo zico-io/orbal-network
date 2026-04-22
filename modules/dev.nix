@@ -36,6 +36,7 @@ in
       ++ optionals cfg.languages.python.enable [ python3 python3Packages.virtualenv ];
 
     programs.direnv.enable = true;
+    programs.nix-ld.enable = true;
 
     # sops-nix: decrypt dev secrets from age-encrypted file
     sops.defaultSopsFile = ../secrets/dev.yaml;
