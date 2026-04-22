@@ -18,6 +18,8 @@
 - [Adding a New Host](runbooks/new-host.md)
 - [Rebuilding / Deploying](runbooks/rebuild.md)
 - [Disaster Recovery](runbooks/disaster-recovery.md)
+- [forge VM](runbooks/forge-vm.md)
+- [nixos-infect Hetzner VPS](runbooks/nixos-infect-hetzner.md)
 
 ## Decision Log
 - [001: Podman over Docker](decisions/001-podman-over-docker.md)

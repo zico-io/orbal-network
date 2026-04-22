@@ -13,9 +13,14 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, sops-nix, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, sops-nix, disko, ... }@inputs:
     let
       system = "x86_64-linux";
 
@@ -27,6 +32,7 @@
           ./modules/base.nix
           ./modules/users.nix
           sops-nix.nixosModules.sops
+          disko.nixosModules.disko
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
@@ -40,6 +46,7 @@
       nixosConfigurations = {
         zebes = mkHost "zebes";
         forge = mkHost "forge";
+        seed = mkHost "seed";
         # elitedesk-1 = mkHost "elitedesk-1";
         # elitedesk-2 = mkHost "elitedesk-2";
         # elitedesk-3 = mkHost "elitedesk-3";
