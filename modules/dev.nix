@@ -28,6 +28,7 @@ in
         ripgrep
         fd
         unzip
+        helix
       ]
       ++ optionals cfg.languages.node.enable [ nodejs ]
       ++ optionals cfg.languages.go.enable [ go gopls ]
@@ -67,7 +68,8 @@ in
         "stperc@users.noreply.github.com ${sshPubKey}\n";
 
       home.sessionVariables = {
-        EDITOR = "vim";
+        EDITOR = "hx";
+        VISUAL = "hx";
         NPM_CONFIG_PREFIX = "$HOME/.npm-global";
       };
 
