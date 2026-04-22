@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 
 with lib;
 
@@ -29,6 +29,7 @@ in
         fd
         unzip
         helix
+        inputs.claude-code.packages.${pkgs.system}.default
       ]
       ++ optionals cfg.languages.node.enable [ nodejs ]
       ++ optionals cfg.languages.go.enable [ go gopls ]
@@ -71,10 +72,7 @@ in
       home.sessionVariables = {
         EDITOR = "hx";
         VISUAL = "hx";
-        NPM_CONFIG_PREFIX = "$HOME/.npm-global";
       };
-
-      home.sessionPath = [ "$HOME/.npm-global/bin" ];
 
       programs.zsh = {
         enable = true;
