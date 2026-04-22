@@ -39,6 +39,7 @@
     {
       nixosConfigurations = {
         zebes = mkHost "zebes";
+        forge = mkHost "forge";
         # elitedesk-1 = mkHost "elitedesk-1";
         # elitedesk-2 = mkHost "elitedesk-2";
         # elitedesk-3 = mkHost "elitedesk-3";
