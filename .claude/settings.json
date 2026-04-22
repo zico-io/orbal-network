@@ -1,0 +1,27 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "agent",
+            "prompt": "Check if any NixOS configuration files (hosts/, modules/, flake.nix) were modified in this session by running 'git diff --name-only HEAD' and 'git diff --name-only --cached'. If .nix files were changed, review the wiki/ directory and identify any wiki pages that are now stale or missing coverage for the changes. Specifically check: wiki/README.md index for missing entries, wiki/runbooks/ for outdated procedures, wiki/network-topology.md for port/firewall changes, wiki/services/ for service config changes, and wiki/architecture.md for structural changes. If wiki updates are needed, make them. If everything is already in sync, do nothing.",
+            "timeout": 120,
+            "statusMessage": "Checking wiki consistency..."
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path // .tool_response.filePath // empty' | grep -qE '\\.(nix)$' && echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PostToolUse\",\"additionalContext\":\"A .nix file was modified. When you finish this task, check if wiki/ docs need updating: runbooks for procedure changes, network-topology.md for firewall/port changes, services/ for service changes, architecture.md for structural changes, and README.md index for new entries.\"}}' || true"
+          }
+        ]
+      }
+    ]
+  }
+}
