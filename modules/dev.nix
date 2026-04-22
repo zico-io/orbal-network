@@ -66,6 +66,13 @@ in
       home.file.".config/git/allowed_signers".text =
         "stperc@users.noreply.github.com ${sshPubKey}\n";
 
+      home.sessionVariables = {
+        EDITOR = "vim";
+        NPM_CONFIG_PREFIX = "$HOME/.npm-global";
+      };
+
+      home.sessionPath = [ "$HOME/.npm-global/bin" ];
+
       programs.zsh = {
         enable = true;
         autosuggestion.enable = true;
@@ -76,13 +83,6 @@ in
           ignoreDups = true;
           ignoreSpace = true;
         };
-        sessionVariables = {
-          EDITOR = "vim";
-          NPM_CONFIG_PREFIX = "$HOME/.npm-global";
-        };
-        envExtra = ''
-          export PATH="$HOME/.npm-global/bin:$PATH"
-        '';
         initContent = ''
           [ -r /run/secrets/github_token ] && export GITHUB_TOKEN="$(cat /run/secrets/github_token)"
         '';
