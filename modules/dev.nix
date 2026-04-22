@@ -79,7 +79,7 @@ in
         sessionVariables = {
           EDITOR = "vim";
         };
-        initExtra = ''
+        initContent = ''
           [ -r /run/secrets/github_token ] && export GITHUB_TOKEN="$(cat /run/secrets/github_token)"
         '';
       };
