@@ -78,7 +78,11 @@ in
         };
         sessionVariables = {
           EDITOR = "vim";
+          NPM_CONFIG_PREFIX = "$HOME/.npm-global";
         };
+        envExtra = ''
+          export PATH="$HOME/.npm-global/bin:$PATH"
+        '';
         initContent = ''
           [ -r /run/secrets/github_token ] && export GITHUB_TOKEN="$(cat /run/secrets/github_token)"
         '';
