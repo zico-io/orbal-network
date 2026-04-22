@@ -9,10 +9,13 @@
     enable = true;
     efiSupport = true;
     efiInstallAsRemovable = true;
-    devices = [ "/dev/nvme0n1" "/dev/nvme1n1" ];
+    devices = [ "nodev" ];
   };
 
-  boot.swraid.enable = true;
+  boot.swraid = {
+    enable = true;
+    mdadmConf = "MAILADDR root";
+  };
 
   networking = {
     useDHCP = false;
@@ -37,11 +40,6 @@
     nameservers = [ "185.12.64.1" "185.12.64.2" "2a01:4ff:ff00::add:1" ];
     firewall.allowedTCPPorts = [ 22 ];
   };
-
-  # Allow root login for initial nixos-anywhere deploy, then remove
-  users.users.root.openssh.authorizedKeys.keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ65MRiriewaqb7UjXy9VCFizBq9V/ZBeloByaLhSV0M dev@zico.xyz"
-  ];
 
   system.stateVersion = "25.05";
 }
