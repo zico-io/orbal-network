@@ -1,6 +1,6 @@
 ---
 name: skill-optimize
-description: Reviews a SKILL.md against the Tessl rubric, then iteratively proposes and applies edits until the skill clears the target score (default 90%) or max iterations run out (default 3, max 10). Shows a unified diff and confirms before each write unless --yes is passed. Use when the user wants to improve a SKILL.md, auto-fix review findings, tighten a vague description, or bring a skill up to publishing quality. Usage - /skill-optimize commit-smart, /skill-optimize onboard-host --max-iterations 5, /skill-optimize ./skills/foo --yes
+description: Reviews a SKILL.md against the Tessl rubric, then iteratively proposes and applies edits until the skill clears the target score (default 90%) or max iterations run out (default 3, max 10). Shows a unified diff and confirms before each write unless --yes is passed. Use when the user wants to improve a SKILL.md, auto-fix review findings, tighten a vague description, or bring a skill up to publishing quality. Not for scoring-only — use /skill-review for that. Usage - /skill-optimize commit-smart, /skill-optimize onboard-host --max-iterations 5, /skill-optimize ./skills/foo --yes
 ---
 
 # Skill Optimize
@@ -42,10 +42,13 @@ tables). Record:
 - Content % (body)
 - Average %
 
-If the average already ≥ target, print the scorecard and exit early with
-"Already above target — nothing to do." Do not rewrite a passing skill.
+**Exit when:** average already ≥ target. Print the scorecard with
+"Already above target — nothing to do." and stop. Do not rewrite a passing skill.
 
 ### Step 4: Optimization loop
+
+**Prereq:** baseline review scores from Step 3.
+**Exit when:** average ≥ target, iteration budget exhausted, or user chose `Stop`.
 
 For iteration `i` in `1..=max_iterations`:
 
@@ -89,6 +92,16 @@ Score: <baseline>% → <final>% (<+delta>%) after <n> iterations
 Changes applied:
   - <one-line summary of what changed>
   - <one-line summary of what changed>
+```
+
+Example:
+
+```
+Score: 72% → 91% (+19%) after 2 iterations
+
+Changes applied:
+  - Added "Use when…" clause and 3 usage examples to description
+  - Promoted implicit steps to ### Step N: headings with exit criteria
 ```
 
 If the loop stopped because of `Stop`, say so. If it stopped because the score
