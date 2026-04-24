@@ -29,6 +29,7 @@ in
         fd
         unzip
         helix
+        pure-prompt
         inputs.claude-code.packages.${pkgs.system}.default
       ]
       ++ optionals cfg.languages.node.enable [ nodejs ]
@@ -53,11 +54,14 @@ in
       path = "/home/stperc/.ssh/id_ed25519";
     };
 
-    # Home-manager: zsh, starship, direnv (merges with users.nix)
+    # Also register nushell as a valid login shell.
+    environment.shells = [ pkgs.nushell ];
+
+    # Home-manager: zsh (pure prompt), nushell, direnv (merges with users.nix)
     home-manager.users.stperc = { pkgs, ... }: {
       programs.git = {
         signing = {
-          key = "key::${sshPubKey}";
+          key = "/home/stperc/.ssh/id_ed25519";
           signByDefault = true;
         };
         extraConfig = {
@@ -86,25 +90,24 @@ in
         };
         initContent = ''
           [ -r /run/secrets/github_token ] && export GITHUB_TOKEN="$(cat /run/secrets/github_token)"
+          autoload -U promptinit && promptinit
+          prompt pure
         '';
       };
 
-      programs.starship = {
+      programs.nushell = {
         enable = true;
-        enableZshIntegration = true;
-        settings = {
-          add_newline = false;
-          character = {
-            success_symbol = "[>](bold green)";
-            error_symbol = "[>](bold red)";
-          };
-          directory.truncation_length = 3;
-        };
+        envFile.text = ''
+          if ('/run/secrets/github_token' | path exists) {
+            $env.GITHUB_TOKEN = (open --raw /run/secrets/github_token | str trim)
+          }
+        '';
       };
 
       programs.direnv = {
         enable = true;
         enableZshIntegration = true;
+        enableNushellIntegration = true;
         nix-direnv.enable = true;
       };
     };
