@@ -4,10 +4,9 @@
       {
         "hooks": [
           {
-            "type": "agent",
-            "prompt": "Check if any NixOS configuration files (hosts/, modules/, flake.nix) were modified in this session by running 'git diff --name-only HEAD' and 'git diff --name-only --cached'. If .nix files were changed, review the wiki/ directory and identify any wiki pages that are now stale or missing coverage for the changes. Specifically check: wiki/README.md index for missing entries, wiki/runbooks/ for outdated procedures, wiki/network-topology.md for port/firewall changes, wiki/services/ for service config changes, and wiki/architecture.md for structural changes. If wiki updates are needed, make them. If everything is already in sync, do nothing.",
-            "timeout": 120,
-            "statusMessage": "Checking wiki consistency..."
+            "type": "command",
+            "command": "sid=$(jq -r \".session_id // \\\"nosession\\\"\"); d=$({ git diff HEAD -- \"*.nix\" 2>/dev/null; git diff --cached -- \"*.nix\" 2>/dev/null; }); [ -z \"$d\" ] && exit 0; h=$(printf \"%s\" \"$d\" | sha256sum | cut -c1-16); m=\"/tmp/orbal-wiki-audit.${sid}.${h}\"; [ -e \"$m\" ] && exit 0; touch \"$m\"; jq -n \"{decision:\\\"block\\\",reason:\\\"NixOS configuration was modified. Review wiki/ for stale or missing coverage: wiki/README.md (index), wiki/runbooks/ (procedures), wiki/network-topology.md (ports/firewall), wiki/services/ (service config), wiki/architecture.md (structure). If already in sync, do nothing.\\\"}\"",
+            "statusMessage": "Checking for wiki updates..."
           }
         ]
       }
