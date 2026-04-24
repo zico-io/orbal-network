@@ -14,8 +14,16 @@ edges:
     condition: when setting up the dev environment or running the project for the first time
   - target: context/secrets.md
     condition: when the task touches sops-encrypted values, age keys, or any sensitive material
+  - target: context/network.md
+    condition: when the task touches tailnet IPs, firewall, DNS, or service URLs
+  - target: context/services/
+    condition: when working on a specific service (reverse-proxy, local-llm, podman, tmux, agent-skills)
+  - target: context/hardware/
+    condition: when the task concerns a specific physical machine's hardware profile
   - target: patterns/INDEX.md
     condition: when starting a task — check the pattern index for a matching pattern file
+  - target: patterns/runbooks/
+    condition: when running an operational procedure (first deploy, rebuild, disaster recovery, forge VM, new host, nixos-infect)
 last_updated: 2026-04-24
 ---
 
@@ -32,6 +40,7 @@ Then read this file fully before doing anything else in this session.
 - Sops-encrypted secrets via `secrets/dev.yaml` and `.sops.yaml` recipient rules.
 - Overlays wired through `overlays/default.nix`.
 - Local agent skills wired onto hosts via `modules/agents.nix` when `orbal.agents.skills` is enabled (source in `skills/`).
+- Single docs tree: `.mex/` absorbs the former `wiki/` — runbooks live under `.mex/patterns/runbooks/`, services under `.mex/context/services/`, hardware under `.mex/context/hardware/`, network under `.mex/context/network.md`, decisions (including ADR-001/002/003) in `.mex/context/decisions.md`.
 
 **Not yet built:**
 - `elitedesk-1`, `elitedesk-2`, `elitedesk-3` bare-metal hosts (planned per README).
@@ -40,7 +49,7 @@ Then read this file fully before doing anything else in this session.
 - Any CI pipeline running `nix flake check` on PRs. [VERIFY AFTER FIRST IMPLEMENTATION]
 
 **Known issues:**
-- The scaffold is newly seeded; several slots are still [TO BE DETERMINED] and need a first real pass through to validate assumptions (naming of secret keys, secret-file split strategy, key onboarding).
+- Some runbooks migrated from the former wiki still use wiki-style phrasing rather than the agent-oriented pattern format; refactor lazily as each is touched.
 
 ## Routing Table
 
@@ -54,9 +63,13 @@ Load the relevant file based on the current task. Always load `context/architect
 | Making a design decision | `context/decisions.md` |
 | Setting up or running the project | `context/setup.md` |
 | Anything touching secrets / sops / age | `context/secrets.md` |
+| Tailnet / firewall / DNS / service URLs | `context/network.md` |
+| Working on a specific service | `context/services/<name>.md` (reverse-proxy, local-llm, podman, tmux, agent-skills) |
+| A physical machine's hardware profile | `context/hardware/<name>.md` |
 | Adding a new flake module | `patterns/add-module.md` |
 | Wiring a module into a host | `patterns/wire-module-into-host.md` |
 | Adding or rotating a sops secret | `patterns/add-secret.md` |
+| Running an operational procedure | `patterns/runbooks/<name>.md` (first-deploy, rebuild, new-host, disaster-recovery, forge-vm, nixos-infect-hetzner) |
 | Any specific task | Check `patterns/INDEX.md` for a matching pattern |
 
 ## Behavioural Contract

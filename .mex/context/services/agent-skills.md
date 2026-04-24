@@ -37,12 +37,12 @@ orbal.agents.claude.enable = true;
 That one toggle brings in the default skill bundle; `commit-smart` also flows in because forge has `orbal.dev.enable = true`. Resolved list on forge:
 
 - `skill-creator` — scaffolds new SKILL.md directories. *(default bundle — `agents.nix`)*
-- `mcp-builder` — helpers for authoring MCP servers. *(default bundle — `agents.nix`)*
-- `claude-api` — Anthropic SDK reference material. *(default bundle — `agents.nix`)*
-- `onboard-host` — local skill: inspects a new machine, scaffolds `hosts/<name>/`, deploys, commits, and stubs the wiki. See `/onboard-host` usage in `skills/onboard-host/SKILL.md`. *(default bundle — `agents.nix`)*
+- `onboard-host` — local skill: inspects a new machine, scaffolds `hosts/<name>/`, deploys, commits, and stubs the hardware profile. See `/onboard-host` usage in `skills/onboard-host/SKILL.md`. *(default bundle — `agents.nix`)*
 - `skill-review` — local skill: grades a SKILL.md against the Tessl rubric (validation checks + Activation + Content scores). See `/skill-review` usage in `skills/skill-review/SKILL.md`. *(default bundle — `agents.nix`)*
 - `skill-optimize` — local skill: iteratively rewrites a SKILL.md to raise its review score, with per-iteration diff + confirmation. See `/skill-optimize` usage in `skills/skill-optimize/SKILL.md`. *(default bundle — `agents.nix`)*
 - `commit-smart` — local skill: analyzes staged changes and writes conventional commits. *(contributed by `dev.nix` when an agent is also enabled)*
+
+`mcp-builder` and `claude-api` were removed from the default bundle on 2026-04-24 — they're upstream Anthropic skills aimed at application-development workflows that don't apply to this infra-only repo. Re-add at the host level (`orbal.agents.skills.list = [ "claude-api" ];`) if you start building Claude-consuming services on a specific host.
 
 Verify the resolved list on any host:
 

@@ -1,12 +1,12 @@
 ---
 name: onboard-host
-description: Inspect a new host, scaffold an optimal hosts/<name>/ flake entry, deploy it, commit, and stub the wiki. Handles fresh NixOS over SSH, Ubuntu/Debian via nixos-infect, and bare-metal rescue envs via nixos-anywhere. Use when onboarding a new machine into the orbal fleet. Usage - /onboard-host, /onboard-host elitedesk-1 root@10.0.0.42
+description: Inspect a new host, scaffold an optimal hosts/<name>/ flake entry, deploy it, commit, and stub the hardware profile. Handles fresh NixOS over SSH, Ubuntu/Debian via nixos-infect, and bare-metal rescue envs via nixos-anywhere. Use when onboarding a new machine into the orbal fleet — e.g. the user says "add this elitedesk", "onboard a new Hetzner VPS", "bring this box into the flake", or points at a rescue/SSH endpoint for a machine that should become an orbal host. Usage - /onboard-host, /onboard-host elitedesk-1 root@10.0.0.42
 ---
 
 # Onboard Host
 
 End-to-end onboarding for a new orbal fleet member. Inspects the target, infers
-a flake config, deploys, commits, and stubs the wiki. Stop and surface errors
+a flake config, deploys, commits, and stubs the hardware profile. Stop and surface errors
 rather than retrying destructively — an onboard that half-completes is recoverable,
 one that wipes the wrong disk is not.
 
@@ -38,7 +38,7 @@ If `bare-metal`, ask a follow-up with AskUserQuestion for the **disk layout**:
 
 - **`nixos-ssh`:** skip.
 - **`ubuntu-infect`:** walk the nixos-infect procedure (cribbed from
-  `wiki/runbooks/nixos-infect-hetzner.md`):
+  `.mex/patterns/runbooks/nixos-infect-hetzner.md`):
   ```bash
   ssh <endpoint> 'curl https://raw.githubusercontent.com/elitak/nixos-infect/master/nixos-infect | NIX_CHANNEL=nixos-25.05 bash -x 2>&1 | tee /tmp/infect.log'
   ```
@@ -86,8 +86,7 @@ optional modules. The catalogue (from `flake.nix`):
 
 - `orbal.dev.enable` — dev tooling (implies `orbal.secrets.enable`)
 - `orbal.languages.{node,go,rust,python}.enable` — language toolchains
-- `orbal.claude.enable` — Claude Code CLI
-- `orbal.claude.agentSkills` — skill bundle (propose `[ "skill-creator" "mcp-builder" "claude-api" "commit-smart" "onboard-host" ]`)
+- `orbal.agents.claude.enable` — Claude Code CLI (auto-enables `orbal.agents.skills`; see `modules/agents.nix` for the default skill list and `.mex/context/services/agent-skills.md` for how to add or override)
 - `orbal.containers.enable` — container runtime
 - `orbal.local-llm.enable` (+ `webui.enable`) — Ollama + Open WebUI
 - `orbal.reverseProxy.enable` — expose services on `<svc>.<name>.orbal`
@@ -153,8 +152,8 @@ ssh <name> which rebuild        # proves modules/shell.nix wrapper is live
 ssh <name> tailscale status
 ```
 
-**Stub the wiki.** Write `wiki/hardware/<name>.md` using the shape of
-`wiki/hardware/elitedesk.md`. Fill the table with what you detected in Step 3
+**Stub the hardware profile.** Write `.mex/context/hardware/<name>.md` using the shape of
+`.mex/context/hardware/elitedesk.md`. Fill the table with what you detected in Step 3
 (model, CPU, RAM, storage, primary NIC).
 
 **Update the host table** in `README.md`. If the name is `elitedesk-1/2/3`,
@@ -164,7 +163,7 @@ flip `Planned` → `Active`. Otherwise append a new row.
 Stage only:
 
 ```bash
-git add hosts/<name>/ flake.nix flake.lock wiki/hardware/<name>.md README.md
+git add hosts/<name>/ flake.nix flake.lock .mex/context/hardware/<name>.md README.md
 ```
 
 Suggested subject: `feat(hosts): onboard <name>`. Body explains *why* this host
@@ -182,7 +181,7 @@ to automate these):
    nixos-rebuild switch --flake .#seed --target-host seed
    ```
 2. **sops enrollment** (only if the final config had `orbal.dev.enable = true` or
-   `orbal.secrets.enable = true`). Procedure in `wiki/runbooks/first-deploy.md`
+   `orbal.secrets.enable = true`). Procedure in `.mex/patterns/runbooks/first-deploy.md`
    §4: derive the age recipient with `ssh-to-age`, add it to `.sops.yaml`,
    `sops updatekeys secrets/dev.yaml`.
 

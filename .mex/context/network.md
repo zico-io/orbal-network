@@ -1,3 +1,25 @@
+---
+name: network
+description: Tailnet topology, firewall posture, DNS layers, and ports exposed on hosts. Load when working on tailnet IPs, firewall rules, service URLs, or the `.orbal` DNS resolver.
+triggers:
+  - "network"
+  - "tailnet"
+  - "tailscale"
+  - "firewall"
+  - "DNS"
+  - "port"
+  - ".orbal"
+  - "dnsmasq"
+edges:
+  - target: context/architecture.md
+    condition: when tracing a network change back to module structure
+  - target: context/services/reverse-proxy.md
+    condition: when adding or debugging a `<service>.<host>.orbal` URL
+  - target: context/decisions.md
+    condition: when the rationale for `.orbal` split-DNS or the three-invariant tailnet pattern is needed
+last_updated: 2026-04-24
+---
+
 # Network Topology
 
 ## Overview
@@ -23,7 +45,7 @@ TBD — document VLAN layout as configured in Unifi.
 Two layers:
 
 - **MagicDNS** (Tailscale) resolves node names (`forge`, `seed`) to tailnet IPv4s. Always on.
-- **`.orbal` fake TLD** — dnsmasq on seed answers every `*.orbal` query with the matching host's tailnet IP. Tailscale admin → DNS → Split-DNS routes `.orbal` queries there. Tailnet clients can then reach services at `http://<service>.<host>.orbal`. See [Reverse proxy](services/reverse-proxy.md) and [ADR 003](decisions/003-orbal-split-dns.md).
+- **`.orbal` fake TLD** — dnsmasq on seed answers every `*.orbal` query with the matching host's tailnet IP. Tailscale admin → DNS → Split-DNS routes `.orbal` queries there. Tailnet clients can then reach services at `http://<service>.<host>.orbal`. See [Reverse proxy](services/reverse-proxy.md) and ADR-003 in [decisions.md](decisions.md).
 
 The host → tailnet-IP map lives in `modules/tailnet-hosts.nix` (`orbal.tailnetHosts`).
 

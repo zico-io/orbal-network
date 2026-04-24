@@ -14,7 +14,7 @@ Plus one manual step: a Tailscale admin → DNS → Split-DNS entry for `.orbal`
 
 ## Why `.orbal` and not `*.ts.net`
 
-Tailscale's built-in ACME (`tailscale cert`) only issues certs for a node's own FQDN — no wildcards, no subdomains. And MagicDNS returns NXDOMAIN for anything under a node name. So `service.host.<tailnet>.ts.net` with HTTPS is not achievable today. See `wiki/decisions/003-orbal-split-dns.md` for the full rationale.
+Tailscale's built-in ACME (`tailscale cert`) only issues certs for a node's own FQDN — no wildcards, no subdomains. And MagicDNS returns NXDOMAIN for anything under a node name. So `service.host.<tailnet>.ts.net` with HTTPS is not achievable today. See ADR-003 in `.mex/context/decisions.md` for the full rationale.
 
 ## Option surface
 

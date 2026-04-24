@@ -41,9 +41,9 @@ modules/     Shared modules, each gated by its own orbal.<x>.enable toggle
 overlays/    Package overlays
 secrets/     sops-age encrypted secrets
 skills/      Local agent skills synced into ~/.claude/skills via orbal.agents.skills
-wiki/        Homelab knowledgebase
+.mex/        Agent context scaffold + runbooks, services, decisions, hardware
 ```
 
-## Wiki
+## Docs
 
-See [wiki/README.md](wiki/README.md) for the full knowledgebase index.
+See [.mex/ROUTER.md](.mex/ROUTER.md) for the full index — routing table covers architecture, services, runbooks, decisions, and hardware.

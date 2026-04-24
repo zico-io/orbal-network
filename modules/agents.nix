@@ -45,8 +45,6 @@ in
     (mkIf cfg.anyEnabled {
       orbal.agents.skills.list = [
         "skill-creator"
-        "mcp-builder"
-        "claude-api"
         "onboard-host"
         "skill-review"
         "skill-optimize"
