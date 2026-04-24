@@ -24,6 +24,17 @@ TBD — document local DNS setup.
 
 ## Ports
 
+Listed ports are those actually exposed on at least one host today.
+
 | Port | Service | Host |
 |------|---------|------|
 | 22 | SSH | forge, seed |
+
+### Tailscale-only (opt-in)
+
+Bound to `0.0.0.0`, reachable only via `tailscale0` (trusted interface in `modules/base.nix`). Public firewall stays closed.
+
+| Port | Service | Module | Hosts |
+|------|---------|--------|-------|
+| 11434 | Ollama HTTP API (OpenAI-compatible `/v1`) | `orbal.local-llm` | forge |
+| 8080 | Open WebUI chat front-end | `orbal.local-llm.webui` | forge |

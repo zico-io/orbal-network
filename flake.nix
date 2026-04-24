@@ -53,6 +53,7 @@
           ./modules/editor.nix
           ./modules/languages.nix
           ./modules/claude.nix
+          ./modules/local-llm.nix
           ./modules/dev.nix
           sops-nix.nixosModules.sops
           disko.nixosModules.disko

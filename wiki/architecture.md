@@ -32,6 +32,7 @@ Secrets (API keys, tokens) are managed with sops-nix. Encrypted files live in th
 | `editor.nix` | `orbal.editor.enable` | helix + `EDITOR`/`VISUAL` |
 | `languages.nix` | `orbal.languages.{node,go,rust,python}.enable` | language toolchains |
 | `claude.nix` | `orbal.claude.enable`, `.agentSkills.enable` | claude-code CLI + optional agent-skills-nix |
+| `local-llm.nix` | `orbal.local-llm.enable`, `.webui.enable` | Ollama server + optional Open WebUI, tailscale-only, declarative pre-pull |
 | `dev.nix` | `orbal.dev.enable` | meta — turns on secrets/shell/cli/git/tmux/editor |
 | `containers.nix`, `vm-guest.nix` | — | host-role specifics |
 

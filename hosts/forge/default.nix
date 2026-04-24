@@ -32,6 +32,12 @@
     };
   };
 
+  orbal.local-llm = {
+    enable = true;
+    webui.enable = true;
+    models = [ "llama3.2:3b" ];
+  };
+
   networking.firewall.allowedTCPPorts = [
     22 # SSH (already open via base, explicit for clarity)
   ];
