@@ -58,7 +58,7 @@ ssh stperc@<forge-ip>
 
 From the VM:
 ```bash
-sudo nixos-rebuild switch --flake github:zico-io/orbal#forge
+sudo nixos-rebuild switch --flake github:zico-io/orbal-network#forge
 ```
 
 Or from any machine with SSH access:

@@ -6,30 +6,40 @@ NixOS flake configuration and knowledgebase for the orbal homelab fleet.
 
 | Host | Role | Status |
 |------|------|--------|
-| `orbal` | Main server — Plex, *arr suite | Active |
-| `elitedesk-1` | Compute node | Planned |
-| `elitedesk-2` | Compute node | Planned |
-| `elitedesk-3` | Compute node | Planned |
+| `forge` | Dev VM on TrueNAS Scale (mother-brain) | Active |
+| `seed` | Hetzner Robot dedicated server (2× NVMe RAID1) | Active |
+| `elitedesk-1` | Bare-metal compute node | Planned |
+| `elitedesk-2` | Bare-metal compute node | Planned |
+| `elitedesk-3` | Bare-metal compute node | Planned |
 
 ## Quick start
 
 ```bash
-# Build the orbal configuration
-nix build .#nixosConfigurations.orbal.config.system.build.toplevel
+# Build a host configuration without activating
+nix build .#nixosConfigurations.<host>.config.system.build.toplevel
 
-# Deploy to orbal (from the repo)
-nixos-rebuild switch --flake .#orbal --target-host orbal
+# Deploy to a host from the repo
+nixos-rebuild switch --flake .#<host> --target-host <host>
 
 # Check the flake
 nix flake check
 ```
 
+On a host itself, the `rebuild` wrapper (from `modules/shell.nix`) is shorter:
+
+```bash
+rebuild              # switch, current host
+rebuild boot         # boot action, current host
+rebuild switch seed  # override host
+```
+
 ## Structure
 
 ```
-hosts/       Per-host NixOS configurations
-modules/     Shared, composable NixOS modules
+hosts/       Per-host NixOS configurations (forge, seed)
+modules/     Shared modules, each gated by its own orbal.<x>.enable toggle
 overlays/    Package overlays
+secrets/     sops-age encrypted secrets
 wiki/        Homelab knowledgebase
 ```
 

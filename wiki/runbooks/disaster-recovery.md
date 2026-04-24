@@ -8,28 +8,24 @@ Everything in this repo — NixOS configs, module definitions, service declarati
 
 | Data | Location | Backup method |
 |------|----------|---------------|
-| Plex config + DB | `plex-config` volume | `podman volume export` |
-| Sonarr config | `sonarr-config` volume | `podman volume export` |
-| Radarr config | `radarr-config` volume | `podman volume export` |
-| Prowlarr config | `prowlarr-config` volume | `podman volume export` |
-| Media files | `/data/media` | External backup (TBD) |
-| Downloads | `/data/downloads` | Not critical — re-downloadable |
-| sops age keys | `/etc/ssh/ssh_host_ed25519_key` | Back up manually |
+| SSH host key (sops-age recipient) | `/etc/ssh/ssh_host_ed25519_key` | Off-host backup — without it, sops secrets can't be decrypted on a replacement host |
+| User home directory (if any local state) | `/home/stperc` | Off-host backup or re-derivable from dotfiles in this repo |
+| Podman volumes (if containers are added) | `podman volume ls` | `podman volume export <name>` |
+
+Currently no host in this repo defines application state worth backing up beyond the SSH host key. Expand this table when stateful services (Plex, databases, etc.) are added.
 
 ## Full restore procedure
 
 1. Install NixOS on replacement hardware
-2. Copy SSH host key (or generate new and update `.sops.yaml`)
+2. Either restore the SSH host key from backup or generate a new one and add its age recipient to `.sops.yaml`, then re-encrypt secrets with `sops updatekeys secrets/dev.yaml`
 3. Clone this repo
 4. Run `nixos-rebuild switch --flake .#<host>`
-5. Import Podman volumes:
-   ```bash
-   podman volume import plex-config plex-config-backup.tar
-   podman volume import sonarr-config sonarr-config-backup.tar
-   # etc.
-   ```
-6. Restart services: `sudo systemctl restart podman-*`
+5. Restore any state backups (Podman volumes, home directory, etc.)
 
-## Backup script (TBD)
+## Backup strategy (TBD)
 
-Automate volume exports + offsite sync. Consider a NixOS module or systemd timer.
+No automated backups yet. Candidates when needed:
+
+- SSH host keys → small, copy to password manager or off-site box
+- Podman volumes → systemd timer invoking `podman volume export` + offsite sync
+- Consider a dedicated `modules/backup.nix` once there's state to back up

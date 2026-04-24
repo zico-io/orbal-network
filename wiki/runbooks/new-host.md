@@ -29,20 +29,27 @@
    {
      imports = [
        ./hardware.nix
-       # Add modules as needed:
+       # Host-role modules (opt-in):
+       # ../../modules/vm-guest.nix
        # ../../modules/containers.nix
      ];
 
-     boot.loader.systemd-boot.enable = true;
+     boot.loader.systemd-boot.enable = true;  # or boot.loader.grub for BIOS/Hetzner
      boot.loader.efi.canTouchEfiVariables = true;
      system.stateVersion = "25.05";
+
+     # Opt into the modular dev/tool stack as needed:
+     # orbal.dev.enable = true;
+     # orbal.languages = { node.enable = true; go.enable = true; };
+     # orbal.claude.enable = true;
    }
    ```
 
 5. **Register in `flake.nix`**:
    ```nix
    nixosConfigurations = {
-     orbal = mkHost "orbal";
+     forge = mkHost "forge";
+     seed  = mkHost "seed";
      <hostname> = mkHost "<hostname>";
    };
    ```

@@ -1,162 +1,100 @@
 # First Deploy
 
-Step-by-step guide to deploying orbal from a fresh NixOS install to a fully running homelab server.
+Generic runbook for deploying any orbal host from a fresh NixOS install. For
+host-specific runbooks see [forge-vm](./forge-vm.md) (TrueNAS VM) and
+[nixos-infect-hetzner](./nixos-infect-hetzner.md) (Hetzner VPS/dedicated).
 
 ## Prerequisites
 
-- NixOS installed on orbal with a working network connection
-- SSH access to orbal from your workstation
+- NixOS installed on the target host with a working network connection
+- SSH access from your workstation
 - This repo cloned on your workstation
 
 ## 1. Generate hardware config
 
-On orbal:
+On the target:
 
 ```bash
 nixos-generate-config --show-hardware-config
 ```
 
-Copy the output and replace the contents of `hosts/orbal/hardware.nix` in this repo. This captures your disk layout, kernel modules, and hardware-specific settings.
+Save the output into `hosts/<hostname>/hardware.nix` in this repo.
 
 ## 2. Add your SSH public key
 
-Edit `modules/users.nix` and add your public key:
+Confirm the `stperc` key in `modules/users.nix` matches the key you'll SSH with. Add additional keys there if onboarding another person.
 
-```nix
-openssh.authorizedKeys.keys = [
-  "ssh-ed25519 AAAA... your-key-here"
-];
-```
+## 3. Create the host entry
 
-If you don't have an ed25519 key yet:
+Follow [Adding a New Host](./new-host.md):
 
-```bash
-ssh-keygen -t ed25519
-cat ~/.ssh/id_ed25519.pub
-```
+- `hosts/<hostname>/default.nix` imports `hardware.nix` and sets the bootloader (`systemd-boot` for EFI, `grub` for Hetzner BIOS).
+- Opt into modules with `orbal.*.enable` toggles. A dev host uses `orbal.dev.enable = true` plus any `orbal.languages.*` / `orbal.claude.*` you want.
+- Register the host in `flake.nix`: `<hostname> = mkHost "<hostname>";`.
 
-## 3. Set up sops-nix (optional, can defer)
+## 4. Set up sops-nix (optional)
 
-On orbal, derive an age key from the SSH host key:
+Needed only if the host uses `orbal.secrets.enable = true` (implicit when `orbal.dev.enable = true`).
+
+On the target, derive an age recipient from the SSH host key:
 
 ```bash
 nix-shell -p ssh-to-age --run 'cat /etc/ssh/ssh_host_ed25519_key.pub | ssh-to-age'
 ```
 
-Paste the output into `.sops.yaml` in place of the placeholder key. Then create your secrets file:
+Add the key to `.sops.yaml` under `creation_rules`, then re-encrypt secrets:
 
 ```bash
-nix-shell -p sops --run 'sops secrets/orbal.yaml'
+nix-shell -p sops --run 'sops updatekeys secrets/dev.yaml'
 ```
 
-Skip this step if you don't have secrets to manage yet — the flake works without it.
-
-## 4. Generate the lock file
-
-On any machine with nix installed:
-
-```bash
-cd /path/to/orbal
-nix flake update
-```
-
-This creates `flake.lock`, pinning all inputs to specific revisions. Commit it.
-
-## 5. Create data directories
-
-On orbal, create the media and download directories:
-
-```bash
-sudo mkdir -p /data/media/tv /data/media/movies /data/downloads
-sudo chown -R 1000:1000 /data
-```
-
-The UID/GID 1000 matches the `PUID`/`PGID` set in the container configs.
-
-## 6. Build and deploy
+## 5. Build and deploy
 
 From your workstation:
 
 ```bash
-nixos-rebuild switch --flake .#orbal --target-host orbal --use-remote-sudo
+nixos-rebuild switch --flake .#<hostname> --target-host <hostname> --use-remote-sudo
 ```
 
-Or directly on orbal:
+Or on the target directly:
 
 ```bash
-cd /path/to/orbal
-sudo nixos-rebuild switch --flake .#orbal
+cd /path/to/orbal-network
+sudo nixos-rebuild switch --flake .#<hostname>
 ```
 
-The first build takes a while — it downloads nixpkgs and all container images. Subsequent rebuilds are fast (only changed derivations are rebuilt).
+The first build takes a while — nixpkgs and any pinned inputs (home-manager, agent-skills, …) are downloaded. Subsequent rebuilds only rebuild changed derivations.
 
-## 7. Verify services
-
-After the rebuild completes:
+## 6. Verify
 
 ```bash
-# Check that Podman containers are running
-ssh orbal podman ps
+# SSH still works (key auth, no password)
+ssh <hostname>
 
-# Check systemd service status
-ssh orbal systemctl status podman-plex podman-sonarr podman-radarr podman-prowlarr
+# rebuild wrapper resolves correctly on the host
+ssh <hostname> which rebuild
+
+# Tailscale came up (if enabled in base.nix)
+ssh <hostname> tailscale status
 ```
 
-You should see all four containers running. Access the web UIs:
-
-| Service | URL |
-|---------|-----|
-| Plex | `http://orbal:32400/web` |
-| Sonarr | `http://orbal:8989` |
-| Radarr | `http://orbal:7878` |
-| Prowlarr | `http://orbal:9696` |
-
-## 8. Claim Plex server
-
-On first launch, Plex needs to be claimed. The easiest method:
-
-1. SSH tunnel to orbal: `ssh -L 32400:localhost:32400 orbal`
-2. Open `http://localhost:32400/web` in your browser
-3. Sign in with your Plex account and claim the server
-
-## 9. Configure the *arr suite
-
-1. **Prowlarr first** — add your indexers
-2. **Sonarr** — add Prowlarr as an indexer, set root folder to `/tv`, add a download client
-3. **Radarr** — add Prowlarr as an indexer, set root folder to `/movies`, add a download client
-
-Each app stores its config in a named Podman volume, so these settings persist across rebuilds.
-
-## 10. Commit and push
-
-Once everything is working:
+## 7. Commit
 
 ```bash
-git add -A
-git commit -m "configure orbal for first deploy"
-git push
+git add hosts/<hostname>/ flake.nix flake.lock
+git commit -m "add <hostname> host"
 ```
-
-Your homelab is now declarative. Any future changes go through the repo.
 
 ## Troubleshooting
 
-**Container won't start:**
+**Can't SSH after rebuild.** Check that your public key is in `modules/users.nix` and that `PasswordAuthentication` is only set to `false` after key-based auth is confirmed.
+
+**Rebuild fails on sops activation.** The host's SSH host key must be in `.sops.yaml` and `secrets/*.yaml` must be re-encrypted against it. See step 4.
+
+**Rollback a bad generation.**
+
 ```bash
-ssh orbal journalctl -u podman-plex -n 50
+ssh <hostname> sudo nixos-rebuild switch --rollback
 ```
 
-**Can't SSH after rebuild:**
-Check that your public key is in `modules/users.nix` and that `PasswordAuthentication` is `false` only after you've confirmed key-based auth works.
-
-**Firewall blocking services:**
-Verify ports are open:
-```bash
-ssh orbal sudo nft list ruleset | grep 32400
-```
-
-**Rollback if something breaks:**
-```bash
-ssh orbal sudo nixos-rebuild switch --rollback
-```
-Or select a previous generation from the systemd-boot menu at boot.
+Or pick a previous generation from the systemd-boot menu at boot.

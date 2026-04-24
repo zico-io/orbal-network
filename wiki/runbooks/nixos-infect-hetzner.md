@@ -103,7 +103,7 @@ nixos-rebuild switch --flake .#<hostname> --target-host root@<vps-ip> --use-remo
 Or on the VPS directly (clone the repo first):
 
 ```bash
-cd /path/to/orbal
+cd /path/to/orbal-network
 sudo nixos-rebuild switch --flake .#<hostname>
 ```
 

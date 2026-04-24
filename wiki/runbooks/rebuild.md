@@ -2,7 +2,7 @@
 
 ## Local rebuild (on the host itself)
 
-The `rebuild` wrapper (defined in `modules/dev.nix`) is the ergonomic path — it walks up from `$PWD` to find `flake.nix` (falling back to `~/orbal-network`) and defaults the target to the current host:
+The `rebuild` wrapper (defined in `modules/shell.nix`, installed when `orbal.shell.enable = true`) is the ergonomic path — it walks up from `$PWD` to find `flake.nix` (falling back to `~/orbal-network`) and defaults the target to the current host:
 
 ```bash
 rebuild              # switch, current host

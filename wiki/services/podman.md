@@ -15,7 +15,7 @@ See [decisions/001-podman-over-docker.md](../decisions/001-podman-over-docker.md
 podman ps
 
 # View logs for a container
-podman logs -f sonarr
+podman logs -f <container-name>
 
 # Pull latest images
 podman auto-update --dry-run
