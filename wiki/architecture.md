@@ -2,7 +2,7 @@
 
 ## Overview
 
-The zebes homelab is a fleet of NixOS machines managed declaratively via a single flake.
+The orbal homelab is a fleet of NixOS machines managed declaratively via a single flake.
 
 **forge** is a dev VM running on TrueNAS Scale (mother-brain). **seed** is a Hetzner Robot dedicated server (2x NVMe RAID1). Both are managed as NixOS configurations in this flake.
 
@@ -15,6 +15,27 @@ Networking is handled by the Unifi stack (not managed by Nix). Tailscale is enab
 ## Secrets
 
 Secrets (API keys, tokens) are managed with sops-nix. Encrypted files live in the repo under `secrets/`, decrypted at activation time using each host's SSH host key.
+
+## Modules
+
+`modules/` is split by concern, each file gating on its own `orbal.<feature>.enable`. Hosts opt in à la carte in `hosts/<name>/default.nix`.
+
+| Module | Toggle | Contents |
+|--------|--------|----------|
+| `base.nix` | always-on | nix settings, timezone, tailscale, ssh, firewall |
+| `users.nix` | always-on | `stperc` user + base git identity |
+| `secrets.nix` | `orbal.secrets.enable` | sops-nix wiring for `github_token`, `ssh_private_key` |
+| `shell.nix` | `orbal.shell.enable` | zsh/nushell/direnv/pure + ripgrep/fd/fzf + `rebuild` script |
+| `cli.nix` | `orbal.cli.enable` | bat/eza/btop/atuin/zoxide/lazygit/gh/jq/yq/… + aliases |
+| `git.nix` | `orbal.git.enable` | SSH-key signing, delta pager, allowed_signers |
+| `tmux.nix` | `orbal.tmux.enable` | tmux config, `tmux-sessionizer`, SSH auto-attach |
+| `editor.nix` | `orbal.editor.enable` | helix + `EDITOR`/`VISUAL` |
+| `languages.nix` | `orbal.languages.{node,go,rust,python}.enable` | language toolchains |
+| `claude.nix` | `orbal.claude.enable`, `.agentSkills.enable` | claude-code CLI + optional agent-skills-nix |
+| `dev.nix` | `orbal.dev.enable` | meta — turns on secrets/shell/cli/git/tmux/editor |
+| `containers.nix`, `vm-guest.nix` | — | host-role specifics |
+
+`orbal.languages.*` and `orbal.claude.*` stay independent of `orbal.dev.enable` so a non-dev host can still host Claude, and a dev host can skip language toolchains or Claude.
 
 ## Deployment
 

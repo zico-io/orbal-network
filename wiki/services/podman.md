@@ -2,7 +2,7 @@
 
 ## Overview
 
-Podman is the container runtime for the zebes fleet. Configured in `modules/containers.nix`.
+Podman is the container runtime for the orbal fleet. Configured in `modules/containers.nix`.
 
 ## Why Podman
 

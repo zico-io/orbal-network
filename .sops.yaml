@@ -4,8 +4,9 @@
 # Then replace the placeholder keys below and run: sops secrets/dev.yaml
 
 keys:
-  - &forge age19psuqagj8ug9tktlajj9kdq94ddyd2uxddrnghxmargpf44zp4qsmxt7n0
-  - &seed  age1689fy0t8umunr826txkg859ym9l7vae94tfjv2v2wea84k9clamqkzke0d
+  - &forge    age19psuqagj8ug9tktlajj9kdq94ddyd2uxddrnghxmargpf44zp4qsmxt7n0
+  - &seed     age1689fy0t8umunr826txkg859ym9l7vae94tfjv2v2wea84k9clamqkzke0d
+  - &titanium age1uczkgc6aygvrrn5mflxa9cu5kd6p835tf5ldjjma76y4g3r90pgq5eskf4
 
 creation_rules:
   - path_regex: secrets/dev\.yaml$
@@ -13,3 +14,4 @@ creation_rules:
       - age:
           - *forge
           - *seed
+          - *titanium

@@ -1,6 +1,6 @@
 # nixos-infect — Hetzner VPS
 
-Convert a fresh Hetzner Cloud VPS from Ubuntu to NixOS using [nixos-infect](https://github.com/elitak/nixos-infect), then onboard it into the zebes fleet.
+Convert a fresh Hetzner Cloud VPS from Ubuntu to NixOS using [nixos-infect](https://github.com/elitak/nixos-infect), then onboard it into the orbal fleet.
 
 ## Prerequisites
 
@@ -103,7 +103,7 @@ nixos-rebuild switch --flake .#<hostname> --target-host root@<vps-ip> --use-remo
 Or on the VPS directly (clone the repo first):
 
 ```bash
-cd /path/to/zebes
+cd /path/to/orbal
 sudo nixos-rebuild switch --flake .#<hostname>
 ```
 

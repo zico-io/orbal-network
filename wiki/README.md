@@ -1,4 +1,4 @@
-# zebes wiki
+# orbal wiki
 
 ## Architecture
 - [System Architecture](architecture.md)
@@ -9,6 +9,8 @@
 
 ## Services
 - [Podman Containers](services/podman.md)
+- [tmux](services/tmux.md)
+- [Agent Skills](services/agent-skills.md)
 
 ## Runbooks
 - [First Deploy](runbooks/first-deploy.md)

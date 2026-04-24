@@ -13,14 +13,23 @@
 
   system.stateVersion = "25.05";
 
-  zebes.vm-guest.enable = true;
+  orbal.vm-guest.enable = true;
 
-  zebes.dev = {
+  orbal.dev.enable = true;
+
+  orbal.languages = {
+    node.enable = true;
+    go.enable = true;
+    rust.enable = true;
+    python.enable = true;
+  };
+
+  orbal.claude = {
     enable = true;
-    languages.node.enable = true;
-    languages.go.enable = true;
-    languages.rust.enable = true;
-    languages.python.enable = true;
+    agentSkills = {
+      enable = true;
+      skills = [ "skill-creator" "mcp-builder" "claude-api" ];
+    };
   };
 
   networking.firewall.allowedTCPPorts = [

@@ -2,8 +2,18 @@
 
 ## Local rebuild (on the host itself)
 
+The `rebuild` wrapper (defined in `modules/dev.nix`) is the ergonomic path — it walks up from `$PWD` to find `flake.nix` (falling back to `~/orbal-network`) and defaults the target to the current host:
+
 ```bash
-sudo nixos-rebuild switch --flake /path/to/zebes#<hostname>
+rebuild              # switch, current host
+rebuild boot         # boot action, current host
+rebuild switch seed  # override host
+```
+
+Equivalent raw form:
+
+```bash
+sudo nixos-rebuild switch --flake /path/to/orbal#<hostname>
 ```
 
 ## Remote deploy (from your workstation)

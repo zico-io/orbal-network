@@ -3,10 +3,10 @@
 with lib;
 
 let
-  cfg = config.zebes.vm-guest;
+  cfg = config.orbal.vm-guest;
 in
 {
-  options.zebes.vm-guest = {
+  options.orbal.vm-guest = {
     enable = mkEnableOption "KVM/QEMU virtual machine guest services";
   };
 

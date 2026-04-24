@@ -1,22 +1,22 @@
 # First Deploy
 
-Step-by-step guide to deploying zebes from a fresh NixOS install to a fully running homelab server.
+Step-by-step guide to deploying orbal from a fresh NixOS install to a fully running homelab server.
 
 ## Prerequisites
 
-- NixOS installed on zebes with a working network connection
-- SSH access to zebes from your workstation
+- NixOS installed on orbal with a working network connection
+- SSH access to orbal from your workstation
 - This repo cloned on your workstation
 
 ## 1. Generate hardware config
 
-On zebes:
+On orbal:
 
 ```bash
 nixos-generate-config --show-hardware-config
 ```
 
-Copy the output and replace the contents of `hosts/zebes/hardware.nix` in this repo. This captures your disk layout, kernel modules, and hardware-specific settings.
+Copy the output and replace the contents of `hosts/orbal/hardware.nix` in this repo. This captures your disk layout, kernel modules, and hardware-specific settings.
 
 ## 2. Add your SSH public key
 
@@ -37,7 +37,7 @@ cat ~/.ssh/id_ed25519.pub
 
 ## 3. Set up sops-nix (optional, can defer)
 
-On zebes, derive an age key from the SSH host key:
+On orbal, derive an age key from the SSH host key:
 
 ```bash
 nix-shell -p ssh-to-age --run 'cat /etc/ssh/ssh_host_ed25519_key.pub | ssh-to-age'
@@ -46,7 +46,7 @@ nix-shell -p ssh-to-age --run 'cat /etc/ssh/ssh_host_ed25519_key.pub | ssh-to-ag
 Paste the output into `.sops.yaml` in place of the placeholder key. Then create your secrets file:
 
 ```bash
-nix-shell -p sops --run 'sops secrets/zebes.yaml'
+nix-shell -p sops --run 'sops secrets/orbal.yaml'
 ```
 
 Skip this step if you don't have secrets to manage yet — the flake works without it.
@@ -56,7 +56,7 @@ Skip this step if you don't have secrets to manage yet — the flake works witho
 On any machine with nix installed:
 
 ```bash
-cd /path/to/zebes
+cd /path/to/orbal
 nix flake update
 ```
 
@@ -64,7 +64,7 @@ This creates `flake.lock`, pinning all inputs to specific revisions. Commit it.
 
 ## 5. Create data directories
 
-On zebes, create the media and download directories:
+On orbal, create the media and download directories:
 
 ```bash
 sudo mkdir -p /data/media/tv /data/media/movies /data/downloads
@@ -78,14 +78,14 @@ The UID/GID 1000 matches the `PUID`/`PGID` set in the container configs.
 From your workstation:
 
 ```bash
-nixos-rebuild switch --flake .#zebes --target-host zebes --use-remote-sudo
+nixos-rebuild switch --flake .#orbal --target-host orbal --use-remote-sudo
 ```
 
-Or directly on zebes:
+Or directly on orbal:
 
 ```bash
-cd /path/to/zebes
-sudo nixos-rebuild switch --flake .#zebes
+cd /path/to/orbal
+sudo nixos-rebuild switch --flake .#orbal
 ```
 
 The first build takes a while — it downloads nixpkgs and all container images. Subsequent rebuilds are fast (only changed derivations are rebuilt).
@@ -96,26 +96,26 @@ After the rebuild completes:
 
 ```bash
 # Check that Podman containers are running
-ssh zebes podman ps
+ssh orbal podman ps
 
 # Check systemd service status
-ssh zebes systemctl status podman-plex podman-sonarr podman-radarr podman-prowlarr
+ssh orbal systemctl status podman-plex podman-sonarr podman-radarr podman-prowlarr
 ```
 
 You should see all four containers running. Access the web UIs:
 
 | Service | URL |
 |---------|-----|
-| Plex | `http://zebes:32400/web` |
-| Sonarr | `http://zebes:8989` |
-| Radarr | `http://zebes:7878` |
-| Prowlarr | `http://zebes:9696` |
+| Plex | `http://orbal:32400/web` |
+| Sonarr | `http://orbal:8989` |
+| Radarr | `http://orbal:7878` |
+| Prowlarr | `http://orbal:9696` |
 
 ## 8. Claim Plex server
 
 On first launch, Plex needs to be claimed. The easiest method:
 
-1. SSH tunnel to zebes: `ssh -L 32400:localhost:32400 zebes`
+1. SSH tunnel to orbal: `ssh -L 32400:localhost:32400 orbal`
 2. Open `http://localhost:32400/web` in your browser
 3. Sign in with your Plex account and claim the server
 
@@ -133,7 +133,7 @@ Once everything is working:
 
 ```bash
 git add -A
-git commit -m "configure zebes for first deploy"
+git commit -m "configure orbal for first deploy"
 git push
 ```
 
@@ -143,7 +143,7 @@ Your homelab is now declarative. Any future changes go through the repo.
 
 **Container won't start:**
 ```bash
-ssh zebes journalctl -u podman-plex -n 50
+ssh orbal journalctl -u podman-plex -n 50
 ```
 
 **Can't SSH after rebuild:**
@@ -152,11 +152,11 @@ Check that your public key is in `modules/users.nix` and that `PasswordAuthentic
 **Firewall blocking services:**
 Verify ports are open:
 ```bash
-ssh zebes sudo nft list ruleset | grep 32400
+ssh orbal sudo nft list ruleset | grep 32400
 ```
 
 **Rollback if something breaks:**
 ```bash
-ssh zebes sudo nixos-rebuild switch --rollback
+ssh orbal sudo nixos-rebuild switch --rollback
 ```
 Or select a previous generation from the systemd-boot menu at boot.

@@ -1,5 +1,5 @@
 {
-  description = "zebes — NixOS homelab fleet";
+  description = "orbal — NixOS homelab fleet";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
@@ -22,9 +22,19 @@
     claude-code = {
       url = "github:sadjow/claude-code-nix";
     };
+
+    agent-skills = {
+      url = "github:Kyure-A/agent-skills-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    anthropic-skills = {
+      url = "github:anthropics/skills";
+      flake = false;
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, sops-nix, disko, claude-code, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, sops-nix, disko, claude-code, agent-skills, anthropic-skills, ... }@inputs:
     let
       system = "x86_64-linux";
 
@@ -35,6 +45,14 @@
           ./hosts/${hostname}
           ./modules/base.nix
           ./modules/users.nix
+          ./modules/secrets.nix
+          ./modules/shell.nix
+          ./modules/cli.nix
+          ./modules/git.nix
+          ./modules/tmux.nix
+          ./modules/editor.nix
+          ./modules/languages.nix
+          ./modules/claude.nix
           ./modules/dev.nix
           sops-nix.nixosModules.sops
           disko.nixosModules.disko
@@ -43,6 +61,7 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.backupFileExtension = "backup";
+            home-manager.extraSpecialArgs = { inherit inputs; };
             networking.hostName = hostname;
           }
         ];

@@ -1,12 +1,12 @@
-# zebes
+# orbal
 
-NixOS flake configuration and knowledgebase for the zebes homelab fleet.
+NixOS flake configuration and knowledgebase for the orbal homelab fleet.
 
 ## Hosts
 
 | Host | Role | Status |
 |------|------|--------|
-| `zebes` | Main server — Plex, *arr suite | Active |
+| `orbal` | Main server — Plex, *arr suite | Active |
 | `elitedesk-1` | Compute node | Planned |
 | `elitedesk-2` | Compute node | Planned |
 | `elitedesk-3` | Compute node | Planned |
@@ -14,11 +14,11 @@ NixOS flake configuration and knowledgebase for the zebes homelab fleet.
 ## Quick start
 
 ```bash
-# Build the zebes configuration
-nix build .#nixosConfigurations.zebes.config.system.build.toplevel
+# Build the orbal configuration
+nix build .#nixosConfigurations.orbal.config.system.build.toplevel
 
-# Deploy to zebes (from the repo)
-nixos-rebuild switch --flake .#zebes --target-host zebes
+# Deploy to orbal (from the repo)
+nixos-rebuild switch --flake .#orbal --target-host orbal
 
 # Check the flake
 nix flake check

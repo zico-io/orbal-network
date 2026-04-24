@@ -42,7 +42,7 @@
 5. **Register in `flake.nix`**:
    ```nix
    nixosConfigurations = {
-     zebes = mkHost "zebes";
+     orbal = mkHost "orbal";
      <hostname> = mkHost "<hostname>";
    };
    ```
