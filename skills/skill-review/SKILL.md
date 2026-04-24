@@ -1,6 +1,6 @@
 ---
 name: skill-review
-description: Reviews a local SKILL.md against the Tessl best-practices rubric and prints a scorecard - deterministic validation checks, Activation Score (description), Implementation Score (body), and an overall percentage. Use when the user wants to grade a skill, check activation quality, audit trigger-term wording, or validate a SKILL.md before publishing. Resolves a skill id to ./skills/<id>/SKILL.md; also accepts a direct file or directory path. Usage - /skill-review commit-smart, /skill-review ./skills/onboard-host, /skill-review /abs/path/SKILL.md
+description: Reviews a local SKILL.md against the Tessl best-practices rubric and prints a scorecard - deterministic validation checks, Activation Score (description), Implementation Score (body), and an overall percentage. Read-only; for auto-fix use /skill-optimize. Use when the user wants to grade or score a skill, check activation quality, audit trigger-term wording, or validate a SKILL.md before publishing. Resolves a skill id to ./skills/<id>/SKILL.md; also accepts a direct file or directory path. Usage - /skill-review commit-smart, /skill-review ./skills/onboard-host, /skill-review /abs/path/SKILL.md
 ---
 
 # Skill Review
@@ -16,7 +16,7 @@ For auto-fix, use `/skill-optimize`.
 
 ### Step 1: Resolve the target
 
-Parse `$ARGUMENTS`:
+Parse the slash-command argument:
 
 - Contains `/` or ends in `.md` → treat as a path. If it's a directory, append
   `SKILL.md`. If the path doesn't exist, stop and surface the error.
@@ -35,6 +35,9 @@ Walk the checklist in **Reference → Validation Checklist**. Every check emits
 one of `✔`, `⚠`, `✖` plus a one-line reason. Tally errors and warnings.
 
 ### Step 4: Activation Score (description)
+
+The description is the skill's activation surface — a skill that never fires
+has 0% effective quality regardless of its body. When in doubt, grade harder.
 
 Grade the `description` field on four 0–4 dimensions from the **Activation
 Rubric** in Reference:
@@ -119,9 +122,6 @@ sentence: ship / minor polish / needs work.
 
 ## Tips
 
-- The description is the skill's activation surface. A skill that never fires
-  has 0% effective quality regardless of its body. When in doubt, grade the
-  description harder.
 - "Third-person voice" in a description means it describes the *skill*, not the
   *user*. `Reviews a SKILL.md…` ✔. `Use this to review your skill…` ⚠ —
   second-person but tolerable if it's paired with a clear capability clause.
