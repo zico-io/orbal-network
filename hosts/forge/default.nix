@@ -28,7 +28,7 @@
     enable = true;
     agentSkills = {
       enable = true;
-      skills = [ "skill-creator" "mcp-builder" "claude-api" "commit-smart" "onboard-host" ];
+      skills = [ "skill-creator" "mcp-builder" "claude-api" "commit-smart" "onboard-host" "skill-review" "skill-optimize" ];
     };
   };
 

@@ -31,7 +31,7 @@ orbal.claude = {
   enable = true;
   agentSkills = {
     enable = true;
-    skills = [ "skill-creator" "mcp-builder" "claude-api" "commit-smart" "onboard-host" ];
+    skills = [ "skill-creator" "mcp-builder" "claude-api" "commit-smart" "onboard-host" "skill-review" "skill-optimize" ];
   };
 };
 ```
@@ -41,6 +41,8 @@ orbal.claude = {
 - `claude-api` — Anthropic SDK reference material.
 - `commit-smart` — local skill: analyzes staged changes and writes conventional commits.
 - `onboard-host` — local skill: inspects a new machine, scaffolds `hosts/<name>/`, deploys, commits, and stubs the wiki. See `/onboard-host` usage in `skills/onboard-host/SKILL.md`.
+- `skill-review` — local skill: grades a SKILL.md against the Tessl rubric (validation checks + Activation + Content scores). See `/skill-review` usage in `skills/skill-review/SKILL.md`.
+- `skill-optimize` — local skill: iteratively rewrites a SKILL.md to raise its review score, with per-iteration diff + confirmation. See `/skill-optimize` usage in `skills/skill-optimize/SKILL.md`.
 
 ## Adding an upstream skill
 
