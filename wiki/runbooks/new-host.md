@@ -1,5 +1,11 @@
 # Adding a New Host
 
+> **Automated path:** run `/onboard-host <name> <ssh-endpoint>` from Claude Code
+> inside this repo. The skill drives the full flow (inspect → scaffold →
+> deploy → commit → wiki stub) for fresh NixOS, Ubuntu-via-nixos-infect, and
+> bare-metal rescue environments. The steps below are the manual fallback and
+> the source of truth if the skill needs to be edited.
+
 ## Prerequisites
 
 - NixOS installed on the target machine
