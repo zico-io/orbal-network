@@ -25,7 +25,7 @@ last_updated: 2026-04-24
 Every sensitive value in this repo is sops-encrypted at rest. Plaintext secrets never land on disk, never appear in Nix source, never get printed by shell or module code.
 
 ## Where Secrets Live
-- `secrets/*.yaml` — sops-encrypted YAML files. `dev.yaml` is the current store; split by scope/environment if/when that grows. [VERIFY AFTER FIRST IMPLEMENTATION — confirm split strategy once a second file is needed]
+- `secrets/dev.yaml` — the current sops-encrypted YAML store; additional files under `secrets/` will be added to split by scope/environment if/when that grows. [VERIFY AFTER FIRST IMPLEMENTATION — confirm split strategy once a second file is needed]
 - `.sops.yaml` — creation rules: which recipients (age public keys) can decrypt which files. Every commit that adds a secret must keep this consistent.
 - `modules/secrets.nix` — the wiring layer. New secrets are declared here as `sops.secrets.<name> = { ... }` with the correct owner/group/mode.
 

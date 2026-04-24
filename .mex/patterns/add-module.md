@@ -25,7 +25,7 @@ last_updated: 2026-04-24
 Load `context/conventions.md` (module authoring pattern + verify checklist) and `context/architecture.md` (where modules sit in the flow). Glance at an existing module like `modules/reverse-proxy.nix` or `modules/dns-resolver.nix` as a shape reference. [VERIFY AFTER FIRST IMPLEMENTATION — swap in the canonical reference module once one is explicitly blessed.]
 
 ## Steps
-1. Pick a kebab-case name (e.g. `modules/metrics-exporter.nix`). One module per file.
+1. Pick a kebab-case filename under `modules/` (one module per file) — e.g. `modules/<your-capability>.nix`.
 2. Create the file with the standard shape:
    - `options.orbal.<name>.enable = lib.mkEnableOption "<human description>";`
    - Additional options under `options.orbal.<name>.*` as needed, each with a `type` and a `default`.

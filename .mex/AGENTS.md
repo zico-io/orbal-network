@@ -10,7 +10,7 @@ last_updated: 2026-04-24
 Declarative NixOS configurations for the orbal tailnet fleet — one flake, many hosts, sops-encrypted secrets.
 
 ## Non-Negotiables
-- Never leak secrets — all secrets live in `secrets/*.yaml`, sops-encrypted; never commit plaintext, never print secret values from shell or Nix.
+- Never leak secrets — all secrets live under `secrets/` as sops-encrypted YAML (`secrets/dev.yaml` today); never commit plaintext, never print secret values from shell or Nix.
 - Never break production hosts — validate every change with `nix flake check` and a dry build before deploy; deploys to live hosts require explicit confirmation.
 - Every system change must be auditable — changes land in this repo via commits; no ad-hoc, out-of-band modifications to hosts.
 

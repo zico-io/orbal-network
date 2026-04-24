@@ -32,7 +32,7 @@ The flake is the single source of truth. Change flow for any system modification
 
 1. Author or edit a module under `modules/<name>.nix` exposing an `orbal.<name>.enable` toggle.
 2. Wire it into one or more hosts under `hosts/<host>/` (default.nix imports + option values).
-3. Encrypt any needed secrets into `secrets/*.yaml` via sops; reference them in the module via sops-nix.
+3. Encrypt any needed secrets into `secrets/dev.yaml` (or a new sops-encrypted file under `secrets/`); reference them in the module via sops-nix.
 4. Validate: `nix flake check` and `nix build .#nixosConfigurations.<host>.config.system.build.toplevel`.
 5. Deploy: `nixos-rebuild switch --flake .#<host> --target-host <host>` (or on-host `rebuild`).
 
@@ -44,7 +44,7 @@ Every host's runtime config is a pure function of the repo at HEAD — no impera
 - **modules/** — shared, toggleable capabilities (`base`, `users`, `secrets`, `shell`, `tailnet-hosts`, `reverse-proxy`, `dns-resolver`, `agents`, `local-llm`, `containers`, `vm-guest`, …). Each gated by `orbal.<name>.enable`.
 - **secrets/** — sops-age encrypted YAML (`dev.yaml` today). Decryption keys are per-host; wiring happens in `modules/secrets.nix`.
 - **overlays/** — package overlays applied via flake overlays output.
-- **skills/** — local agent skills materialised into `~/.claude/skills` on hosts that enable `orbal.agents.skills`.
+- **skills/** — local agent skills wired onto hosts via `modules/agents.nix` when `orbal.agents.skills` is enabled.
 
 ## External Dependencies
 - **Tailscale** — the tailnet. Hosts address each other over Tailscale; `modules/tailnet-hosts.nix` is the wiring. Auth keys are sops secrets.

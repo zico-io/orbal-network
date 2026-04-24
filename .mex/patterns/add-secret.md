@@ -22,11 +22,11 @@ last_updated: 2026-04-24
 # Pattern: Add or rotate a sops secret
 
 ## Context
-Load `context/secrets.md` before anything. The secret flow is: encrypt in `secrets/*.yaml` → declare in a module via `sops.secrets.<name>` → reference the runtime path. Skip any step and you either leak or you build a broken host.
+Load `context/secrets.md` before anything. The secret flow is: encrypt in a file under `secrets/` (today that's `secrets/dev.yaml`) → declare in a module via `sops.secrets.<name>` → reference the runtime path. Skip any step and you either leak or you build a broken host.
 
 ## Steps
 1. Confirm `.sops.yaml` recipients cover every host that must read this secret. If not, add the host's age public key to the relevant path rule.
-2. Edit the encrypted file: `sops secrets/dev.yaml` (or the appropriate file). Add the key under a sensible group; use snake_case names. [VERIFY AFTER FIRST IMPLEMENTATION — confirm naming/grouping scheme once the second file is created.]
+2. Edit the encrypted file — run `sops` against `secrets/dev.yaml` (or the appropriate file). Add the key under a sensible group; use snake_case names. [VERIFY AFTER FIRST IMPLEMENTATION — confirm naming/grouping scheme once the second file is created.]
 3. If you added a new recipient in step 1, re-encrypt existing files so the new key works: `sops updatekeys secrets/<file>.yaml`.
 4. Declare the secret in the owning module (or `modules/secrets.nix` if it's cross-cutting):
    ```nix
@@ -51,7 +51,7 @@ Load `context/secrets.md` before anything. The secret flow is: encrypt in `secre
 - Rotating by replacing the value in-place is fine for the repo, but remember the old value may still be on hosts until the next activation. If compromised, deploy immediately, then revoke upstream.
 
 ## Verify
-- [ ] The secret exists only inside `secrets/*.yaml` (encrypted); grep the rest of the repo for the plaintext value and find nothing.
+- [ ] The secret exists only inside an encrypted file under `secrets/`; grep the rest of the repo for the plaintext value and find nothing.
 - [ ] `.sops.yaml` recipients match the set of hosts that need the secret.
 - [ ] The module declares `sops.secrets.<name>` with correct owner/group/mode.
 - [ ] Every consumer references `config.sops.secrets.<name>.path`, not a string literal.

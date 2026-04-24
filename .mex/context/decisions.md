@@ -38,7 +38,7 @@ last_updated: 2026-04-24
 ### sops-nix for all secrets
 **Date:** 2026-04-24
 **Status:** Active
-**Decision:** All secrets live in `secrets/*.yaml`, sops-encrypted; modules reference values exclusively through `config.sops.secrets.<name>.path`.
+**Decision:** All secrets live under `secrets/` as sops-encrypted YAML (`secrets/dev.yaml` today); modules reference values exclusively through `config.sops.secrets.<name>.path`.
 **Reasoning:** Encrypted-at-rest, per-host decryption keys, and first-class NixOS integration. Keeps the "never leak secrets" non-negotiable enforceable.
 **Alternatives considered:** agenix (rejected — sops-nix has wider YAML/structured-secret support), Vault (rejected — adds a runtime dependency and operational surface for a small fleet), plaintext + .gitignore (rejected — one slip leaks the repo).
 **Consequences:** Every new secret requires a sops edit and a module wiring step. See `patterns/add-secret.md`.

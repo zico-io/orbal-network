@@ -42,7 +42,7 @@ This repo has no runtime env vars — configuration is fully declarative. Secret
 - `nix build .#nixosConfigurations.<host>.config.system.build.toplevel` — dry build a host.
 - `nixos-rebuild switch --flake .#<host> --target-host <host>` — deploy from the local checkout to a remote host.
 - `rebuild` (on-host) — wrapper from `modules/shell.nix`; `rebuild boot`, `rebuild switch <host>` variants available.
-- `sops secrets/dev.yaml` — edit an encrypted secret file (decrypt → $EDITOR → re-encrypt).
+- `sops` `secrets/dev.yaml` — edit an encrypted secret file (decrypt → $EDITOR → re-encrypt).
 - `nix flake update` — bump all flake inputs; follow with `nix flake check` and a full host build sweep.
 
 ## Common Issues
