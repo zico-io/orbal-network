@@ -37,6 +37,10 @@ in
             input = "anthropic-skills";
             subdir = "skills";
           };
+          sources.orbal = {
+            path = ../skills;
+            subdir = ".";
+          };
           skills.enable = cfg.agentSkills.skills;
           targets.claude.enable = true;
         };
