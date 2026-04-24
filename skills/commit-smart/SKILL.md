@@ -1,6 +1,6 @@
 ---
 name: commit-smart
-description: Analyze staged/unstaged changes and create semantic conventional commits with context about WHY, not just WHAT. Auto-detects commit type and scope from the diff. Supports optional type/scope arguments. Usage - /commit-smart, /commit-smart fix, /commit-smart refactor api
+description: Analyzes staged/unstaged changes and creates semantic conventional commits with context about WHY, not just WHAT. Auto-detects commit type and scope from the diff. Supports optional type/scope arguments. Use when the user asks for help writing commit messages, wants to commit changes, or mentions git commits, staged changes, or diffs. Usage - /commit-smart, /commit-smart fix, /commit-smart refactor api
 ---
 
 # Smart Commit
@@ -38,33 +38,14 @@ Read the full staged diff:
 git diff --cached
 ```
 
-Determine the commit type from the changes:
-
-| Signal | Type |
-|--------|------|
-| New files with new functionality | `feat` |
-| New test files or test additions | `test` |
-| Changes to existing logic fixing incorrect behavior | `fix` |
-| Structural changes without behavior change | `refactor` |
-| package.json, tsconfig, CI config changes | `chore` |
-| Build/bundler config changes | `build` |
-| README, docs, comments only | `docs` |
-| Formatting, whitespace, semicolons only | `style` |
-| Performance improvements | `perf` |
-
-Determine the scope from the primary directory or module affected:
-- `src/api/` -> `api`
-- `src/components/auth/` -> `auth`
-- `tests/` -> `tests`
-- Root config files -> omit scope
-- Multiple unrelated areas -> omit scope
+Determine the commit type and scope using the reference tables in the **Reference** section below.
 
 ### Step 4: Check for user overrides
 
 If the user provided arguments via `$ARGUMENTS`:
-- Single word (e.g., `fix`) -> use as commit type
-- Two words (e.g., `refactor api`) -> use as type and scope
-- Otherwise -> use auto-detected values
+- Single word (e.g., `fix`) → use as commit type
+- Two words (e.g., `refactor api`) → use as type and scope
+- Otherwise → use auto-detected values
 
 ### Step 5: Compose the commit message
 
@@ -72,7 +53,7 @@ Format: `type(scope): imperative short description`
 
 Rules:
 - Subject line max 72 characters
-- Use imperative mood ("add", "fix", "refactor", not "added", "fixes")
+- Use imperative mood
 - Don't end with a period
 - Body explains **WHY** this change was made, not what changed (the diff shows what)
 - If changes are trivial (typo fix, formatting), skip the body
@@ -107,4 +88,32 @@ Show the committed hash and message.
 - Run after completing a logical unit of work, not after every file change
 - If the diff is too large for one commit, suggest splitting into multiple commits
 - For breaking changes, add `!` after the scope: `feat(api)!: change response format`
-- The body should answer "if someone reads this commit in 6 months, will they understand WHY?"
+
+---
+
+## Reference
+
+### Commit Type Signals
+
+| Signal | Type |
+|--------|------|
+| New files with new functionality | `feat` |
+| New test files or test additions | `test` |
+| Changes to existing logic fixing incorrect behavior | `fix` |
+| Structural changes without behavior change | `refactor` |
+| package.json, tsconfig, CI config changes | `chore` |
+| Build/bundler config changes | `build` |
+| README, docs, comments only | `docs` |
+| Formatting, whitespace, semicolons only | `style` |
+| Performance improvements | `perf` |
+
+### Scope Detection Rules
+
+| Path pattern | Scope |
+|---|---|
+| `src/api/` | `api` |
+| `src/components/auth/` | `auth` |
+| `tests/` | `tests` |
+| Root config files | *(omit scope)* |
+| Multiple unrelated areas | *(omit scope)* |
+
