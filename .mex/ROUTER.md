@@ -39,8 +39,8 @@ Then read this file fully before doing anything else in this session.
 - Core shared modules: base, users, secrets (sops-nix), shell, cli, git, tmux, editor, languages, agents, local-llm, tailnet-hosts, reverse-proxy, dns-resolver, dev, containers, vm-guest.
 - Sops-encrypted secrets via `secrets/dev.yaml` and `.sops.yaml` recipient rules.
 - Overlays wired through `overlays/default.nix`.
-- Local agent skills wired onto hosts via `modules/agents.nix` when `orbal.agents.skills` is enabled (source in `skills/`).
-- Single docs tree: `.mex/` absorbs the former `wiki/` — runbooks live under `.mex/patterns/runbooks/`, services under `.mex/context/services/`, hardware under `.mex/context/hardware/`, network under `.mex/context/network.md`, decisions (including ADR-001/002/003) in `.mex/context/decisions.md`.
+- Local agent skills wired onto hosts via `modules/agents.nix` when `orbal.agents.skills` is enabled (source in `.mex/skills/`).
+- Single agent tree: `.mex/` absorbs the former `wiki/` **and** the former top-level `skills/` — runbooks live under `.mex/patterns/runbooks/`, services under `.mex/context/services/`, hardware under `.mex/context/hardware/`, network under `.mex/context/network.md`, decisions (including ADR-001/002/003) in `.mex/context/decisions.md`, local Claude skills under `.mex/skills/`.
 
 **Not yet built:**
 - `elitedesk-1`, `elitedesk-2`, `elitedesk-3` bare-metal hosts (planned per README).

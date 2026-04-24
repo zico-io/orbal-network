@@ -1,6 +1,6 @@
 ---
 name: skill-optimize
-description: Reviews a SKILL.md against the Tessl rubric, then iteratively proposes and applies edits until the skill clears the target score (default 90%) or max iterations run out (default 3, max 10). Shows a unified diff and confirms before each write unless --yes is passed. Use when the user wants to improve a SKILL.md, auto-fix review findings, tighten a vague description, or bring a skill up to publishing quality. Not for scoring-only — use /skill-review for that. Usage - /skill-optimize commit-smart, /skill-optimize onboard-host --max-iterations 5, /skill-optimize ./skills/foo --yes
+description: Reviews a SKILL.md against the Tessl rubric, then iteratively proposes and applies edits until the skill clears the target score (default 90%) or max iterations run out (default 3, max 10). Shows a unified diff and confirms before each write unless --yes is passed. Use when the user wants to improve a SKILL.md, auto-fix review findings, tighten a vague description, or bring a skill up to publishing quality. Not for scoring-only — use /skill-review for that. Usage - /skill-optimize commit-smart, /skill-optimize onboard-host --max-iterations 5, /skill-optimize .mex/skills/foo --yes
 ---
 
 # Skill Optimize
@@ -19,8 +19,8 @@ Same resolver as `/skill-review`:
 
 - Path-looking (`/` in it or ends in `.md`) → treat as a path; append `SKILL.md`
   if it's a directory. Surface missing-file errors, don't invent.
-- Bare token → `./skills/<arg>/SKILL.md`.
-- Empty → `ls skills/` and use `AskUserQuestion` to pick.
+- Bare token → `.mex/skills/<arg>/SKILL.md`.
+- Empty → `ls .mex/skills/` and use `AskUserQuestion` to pick.
 
 ### Step 2: Parse flags
 

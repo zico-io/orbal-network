@@ -50,7 +50,7 @@ Every host's runtime config is a pure function of the repo at HEAD — no impera
 - **modules/** — shared, toggleable capabilities. Each gated by `orbal.<name>.enable`. See the module table below.
 - **secrets/** — sops-age encrypted YAML (`dev.yaml` today). Decryption keys are per-host; wiring happens in `modules/secrets.nix`.
 - **overlays/** — package overlays applied via flake overlays output.
-- **skills/** — local agent skills wired onto hosts via `modules/agents.nix` when `orbal.agents.skills` is enabled.
+- **.mex/skills/** — local agent skills wired onto hosts via `modules/agents.nix` when `orbal.agents.skills` is enabled.
 
 ## Modules
 

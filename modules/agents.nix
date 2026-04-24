@@ -62,7 +62,7 @@ in
             subdir = "skills";
           };
           sources.orbal = {
-            path = ../skills;
+            path = ../.mex/skills;
             subdir = ".";
           };
           skills.enable = cfg.skills.list;

@@ -24,7 +24,7 @@ Both are pinned in `flake.lock`. `inputs` is threaded into home-manager via `hom
 Two sources are registered in `modules/agents.nix`:
 
 - `anthropic` — upstream catalog at `anthropic-skills/skills` (pinned via flake input).
-- `orbal` — local repo catalog at `./skills/`. Skills land at `~/.claude/skills/<skill-id>/` alongside upstream ones; Claude Code's loader only looks one level deep under `skills/`, so we can't use `idPrefix` to namespace them without hiding the skill. If a local ID collides with an upstream one, rename the local directory.
+- `orbal` — local repo catalog at `./.mex/skills/`. Skills land at `~/.claude/skills/<skill-id>/` alongside upstream ones; Claude Code's loader only looks one level deep under `skills/`, so we can't use `idPrefix` to namespace them without hiding the skill. If a local ID collides with an upstream one, rename the local directory.
 
 ## Currently enabled
 
@@ -37,9 +37,9 @@ orbal.agents.claude.enable = true;
 That one toggle brings in the default skill bundle; `commit-smart` also flows in because forge has `orbal.dev.enable = true`. Resolved list on forge:
 
 - `skill-creator` — scaffolds new SKILL.md directories. *(default bundle — `agents.nix`)*
-- `onboard-host` — local skill: inspects a new machine, scaffolds `hosts/<name>/`, deploys, commits, and stubs the hardware profile. See `/onboard-host` usage in `skills/onboard-host/SKILL.md`. *(default bundle — `agents.nix`)*
-- `skill-review` — local skill: grades a SKILL.md against the Tessl rubric (validation checks + Activation + Content scores). See `/skill-review` usage in `skills/skill-review/SKILL.md`. *(default bundle — `agents.nix`)*
-- `skill-optimize` — local skill: iteratively rewrites a SKILL.md to raise its review score, with per-iteration diff + confirmation. See `/skill-optimize` usage in `skills/skill-optimize/SKILL.md`. *(default bundle — `agents.nix`)*
+- `onboard-host` — local skill: inspects a new machine, scaffolds `hosts/<name>/`, deploys, commits, and stubs the hardware profile. See `/onboard-host` usage in `.mex/skills/onboard-host/SKILL.md`. *(default bundle — `agents.nix`)*
+- `skill-review` — local skill: grades a SKILL.md against the Tessl rubric (validation checks + Activation + Content scores). See `/skill-review` usage in `.mex/skills/skill-review/SKILL.md`. *(default bundle — `agents.nix`)*
+- `skill-optimize` — local skill: iteratively rewrites a SKILL.md to raise its review score, with per-iteration diff + confirmation. See `/skill-optimize` usage in `.mex/skills/skill-optimize/SKILL.md`. *(default bundle — `agents.nix`)*
 - `commit-smart` — local skill: analyzes staged changes and writes conventional commits. *(contributed by `dev.nix` when an agent is also enabled)*
 
 `mcp-builder` and `claude-api` were removed from the default bundle on 2026-04-24 — they're upstream Anthropic skills aimed at application-development workflows that don't apply to this infra-only repo. Re-add at the host level (`orbal.agents.skills.list = [ "claude-api" ];`) if you start building Claude-consuming services on a specific host.
@@ -66,10 +66,10 @@ To pin a different catalog, add a new input in `flake.nix` and register it as an
 
 ## Adding a local skill
 
-Local skills live under `./skills/<skill-id>/SKILL.md` at the repo root and are exposed via the `orbal` source.
+Local skills live under `.mex/skills/<skill-id>/SKILL.md` and are exposed via the `orbal` source.
 
-1. `mkdir skills/<skill-id>` and write `SKILL.md` with the `name` / `description` frontmatter (see `skills/commit-smart/SKILL.md` for a reference).
-2. `git add skills/<skill-id>/SKILL.md` — flake sources only include Git-tracked files, so untracked skills won't make it into the store.
+1. `mkdir .mex/skills/<skill-id>` and write `SKILL.md` with the `name` / `description` frontmatter (see `.mex/skills/commit-smart/SKILL.md` for a reference).
+2. `git add .mex/skills/<skill-id>/SKILL.md` — flake sources only include Git-tracked files, so untracked skills won't make it into the store.
 3. Wire it into a module (or a host's `orbal.agents.skills.list`) using the same placement rules as upstream skills above.
 4. Rebuild: `rebuild switch`.
 

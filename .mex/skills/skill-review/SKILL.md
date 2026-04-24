@@ -1,6 +1,6 @@
 ---
 name: skill-review
-description: Reviews a local SKILL.md against the Tessl best-practices rubric and prints a scorecard - deterministic validation checks, Activation Score (description), Implementation Score (body), and an overall percentage. Read-only; for auto-fix use /skill-optimize. Use when the user wants to grade or score a skill, check activation quality, audit trigger-term wording, or validate a SKILL.md before publishing. Resolves a skill id to ./skills/<id>/SKILL.md; also accepts a direct file or directory path. Usage - /skill-review commit-smart, /skill-review ./skills/onboard-host, /skill-review /abs/path/SKILL.md
+description: Reviews a local SKILL.md against the Tessl best-practices rubric and prints a scorecard - deterministic validation checks, Activation Score (description), Implementation Score (body), and an overall percentage. Read-only; for auto-fix use /skill-optimize. Use when the user wants to grade or score a skill, check activation quality, audit trigger-term wording, or validate a SKILL.md before publishing. Resolves a skill id to .mex/skills/<id>/SKILL.md; also accepts a direct file or directory path. Usage - /skill-review commit-smart, /skill-review .mex/skills/onboard-host, /skill-review /abs/path/SKILL.md
 ---
 
 # Skill Review
@@ -20,9 +20,9 @@ Parse the slash-command argument:
 
 - Contains `/` or ends in `.md` → treat as a path. If it's a directory, append
   `SKILL.md`. If the path doesn't exist, stop and surface the error.
-- Bare token → resolve to `./skills/<arg>/SKILL.md` relative to the repo root.
-- Empty → list the local skills with `ls skills/` and use `AskUserQuestion` to
-  pick one. If the cwd has no `skills/` dir, ask the user for a path.
+- Bare token → resolve to `.mex/skills/<arg>/SKILL.md` relative to the repo root.
+- Empty → list the local skills with `ls .mex/skills/` and use `AskUserQuestion` to
+  pick one. If the cwd has no `.mex/skills/` dir, ask the user for a path.
 
 ### Step 2: Read the SKILL.md
 
