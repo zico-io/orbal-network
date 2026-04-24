@@ -22,5 +22,12 @@ in
       mode = "0600";
       path = "/home/stperc/.ssh/id_ed25519";
     };
+
+    # sops auto-creates /home/stperc/.ssh as root:root 755 when it places the key
+    # symlink there, which blocks stperc from writing known_hosts or adding its
+    # own keys. Force ownership/perms so the directory is stperc's to manage.
+    systemd.tmpfiles.rules = [
+      "d /home/stperc/.ssh 0700 stperc users -"
+    ];
   };
 }

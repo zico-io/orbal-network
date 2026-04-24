@@ -5,6 +5,10 @@
     settings = {
       experimental-features = [ "nix-command" "flakes" ];
       auto-optimise-store = true;
+      # Allow wheel members (e.g. stperc) to push unsigned store paths via the
+      # local nix-daemon. Required for `nixos-rebuild --target-host` to work
+      # without root SSH, since PermitRootLogin = "no".
+      trusted-users = [ "root" "@wheel" ];
     };
     gc = {
       automatic = true;

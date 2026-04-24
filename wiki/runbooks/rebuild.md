@@ -22,6 +22,16 @@ sudo nixos-rebuild switch --flake /path/to/orbal#<hostname>
 nixos-rebuild switch --flake .#<hostname> --target-host <hostname> --use-remote-sudo
 ```
 
+Relies on `nix.settings.trusted-users = [ "root" "@wheel" ]` in `modules/base.nix` so wheel members can push unsigned store paths (host-specific derivations aren't in cache.nixos.org and aren't signed).
+
+**First deploy onto a fresh host** (before that trust is baked in) — build on the target to skip the push entirely:
+
+```bash
+nixos-rebuild switch --flake .#<hostname> --target-host <hostname> --build-host <hostname> --use-remote-sudo
+```
+
+Once the first switch lands, `--build-host` is optional.
+
 ## Test before switching
 
 ```bash
