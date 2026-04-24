@@ -47,7 +47,7 @@
      # Opt into the modular dev/tool stack as needed:
      # orbal.dev.enable = true;
      # orbal.languages = { node.enable = true; go.enable = true; };
-     # orbal.claude.enable = true;
+     # orbal.agents.claude.enable = true;
    }
    ```
 

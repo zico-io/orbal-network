@@ -29,7 +29,7 @@ Confirm the `stperc` key in `modules/users.nix` matches the key you'll SSH with.
 Follow [Adding a New Host](./new-host.md):
 
 - `hosts/<hostname>/default.nix` imports `hardware.nix` and sets the bootloader (`systemd-boot` for EFI, `grub` for Hetzner BIOS).
-- Opt into modules with `orbal.*.enable` toggles. A dev host uses `orbal.dev.enable = true` plus any `orbal.languages.*` / `orbal.claude.*` you want.
+- Opt into modules with `orbal.*.enable` toggles. A dev host uses `orbal.dev.enable = true` plus any `orbal.languages.*` / `orbal.agents.*` you want.
 - Register the host in `flake.nix`: `<hostname> = mkHost "<hostname>";`.
 
 ## 4. Set up sops-nix (optional)

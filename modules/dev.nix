@@ -14,12 +14,18 @@ in
   options.orbal.dev.enable =
     mkEnableOption "dev bundle (shell + cli + git + tmux + editor + secrets)";
 
-  config = mkIf cfg.enable {
-    orbal.secrets.enable = mkDefault true;
-    orbal.shell.enable = mkDefault true;
-    orbal.cli.enable = mkDefault true;
-    orbal.git.enable = mkDefault true;
-    orbal.tmux.enable = mkDefault true;
-    orbal.editor.enable = mkDefault true;
-  };
+  config = mkMerge [
+    (mkIf cfg.enable {
+      orbal.secrets.enable = mkDefault true;
+      orbal.shell.enable = mkDefault true;
+      orbal.cli.enable = mkDefault true;
+      orbal.git.enable = mkDefault true;
+      orbal.tmux.enable = mkDefault true;
+      orbal.editor.enable = mkDefault true;
+    })
+
+    (mkIf (cfg.enable && config.orbal.agents.anyEnabled) {
+      orbal.agents.skills.list = [ "commit-smart" ];
+    })
+  ];
 }

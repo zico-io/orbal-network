@@ -31,7 +31,7 @@ Secrets (API keys, tokens) are managed with sops-nix. Encrypted files live in th
 | `tmux.nix` | `orbal.tmux.enable` | tmux config, `tmux-sessionizer`, SSH auto-attach |
 | `editor.nix` | `orbal.editor.enable` | helix + `EDITOR`/`VISUAL` |
 | `languages.nix` | `orbal.languages.{node,go,rust,python}.enable` | language toolchains |
-| `claude.nix` | `orbal.claude.enable`, `.agentSkills.enable` | claude-code CLI + optional agent-skills-nix |
+| `agents.nix` | `orbal.agents.claude.enable`, `.skills.enable` | claude-code CLI + agent-skills-nix (skills contributed by modules) |
 | `local-llm.nix` | `orbal.local-llm.enable`, `.webui.enable` | Ollama server + optional Open WebUI, tailscale-only, declarative pre-pull |
 | `tailnet-hosts.nix` | always-on | shared `orbal.tailnetHosts` map (hostname → tailnet IPv4), consumed by the DNS resolver |
 | `reverse-proxy.nix` | `orbal.reverseProxy.enable` | per-host Caddy exposing services as `<service>.<host>.orbal`, tailnet-only, plain HTTP |
@@ -39,7 +39,7 @@ Secrets (API keys, tokens) are managed with sops-nix. Encrypted files live in th
 | `dev.nix` | `orbal.dev.enable` | meta — turns on secrets/shell/cli/git/tmux/editor |
 | `containers.nix`, `vm-guest.nix` | — | host-role specifics |
 
-`orbal.languages.*` and `orbal.claude.*` stay independent of `orbal.dev.enable` so a non-dev host can still host Claude, and a dev host can skip language toolchains or Claude.
+`orbal.languages.*` and `orbal.agents.*` stay independent of `orbal.dev.enable` so a non-dev host can still host agents, and a dev host can skip language toolchains or agents. Skills are contributed by the modules that own them: `agents.nix` bundles the default skill set when any agent is enabled, and `dev.nix` additionally contributes `commit-smart` when both `orbal.dev.enable` and an agent are on. Hosts may append extras to `orbal.agents.skills.list`.
 
 ## Deployment
 

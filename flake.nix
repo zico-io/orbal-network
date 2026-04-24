@@ -52,7 +52,7 @@
           ./modules/tmux.nix
           ./modules/editor.nix
           ./modules/languages.nix
-          ./modules/claude.nix
+          ./modules/agents.nix
           ./modules/local-llm.nix
           ./modules/tailnet-hosts.nix
           ./modules/reverse-proxy.nix

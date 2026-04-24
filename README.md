@@ -40,7 +40,7 @@ hosts/       Per-host NixOS configurations (forge, seed)
 modules/     Shared modules, each gated by its own orbal.<x>.enable toggle
 overlays/    Package overlays
 secrets/     sops-age encrypted secrets
-skills/      Local agent skills synced into ~/.claude/skills via orbal.claude.agentSkills
+skills/      Local agent skills synced into ~/.claude/skills via orbal.agents.skills
 wiki/        Homelab knowledgebase
 ```
 

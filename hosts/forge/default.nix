@@ -24,13 +24,7 @@
     python.enable = true;
   };
 
-  orbal.claude = {
-    enable = true;
-    agentSkills = {
-      enable = true;
-      skills = [ "skill-creator" "mcp-builder" "claude-api" "commit-smart" "onboard-host" "skill-review" "skill-optimize" ];
-    };
-  };
+  orbal.agents.claude.enable = true;
 
   orbal.local-llm = {
     enable = true;

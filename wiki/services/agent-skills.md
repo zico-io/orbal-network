@@ -2,7 +2,11 @@
 
 ## Overview
 
-Declarative management of Claude Code agent skills via [agent-skills-nix](https://github.com/Kyure-A/agent-skills-nix). Lives in `modules/claude.nix`, opt-in via `orbal.claude.agentSkills.enable = true` (requires `orbal.claude.enable = true`). Independent of the dev bundle — enable per-host regardless of `orbal.dev.enable`.
+Declarative management of agent skills via [agent-skills-nix](https://github.com/Kyure-A/agent-skills-nix). Lives in `modules/agents.nix`. Skills are contributed by the modules they belong to and activate whenever a host enables an agent — the host no longer curates a skill list.
+
+- `orbal.agents.claude.enable` installs the Claude Code CLI.
+- `orbal.agents.skills.enable` gates skill sync; defaults true whenever any agent is enabled.
+- `orbal.agents.skills.list` is the merged skill list. Modules append their own bundle; hosts may append extras.
 
 Skills are bundled at build time from pinned flake inputs and synced into `$CLAUDE_CONFIG_DIR/skills` (default `~/.claude/skills`) via home-manager activation. Claude Code auto-discovers them from that path.
 
@@ -17,7 +21,7 @@ Both are pinned in `flake.lock`. `inputs` is threaded into home-manager via `hom
 
 ## Sources
 
-Two sources are registered in `modules/claude.nix`:
+Two sources are registered in `modules/agents.nix`:
 
 - `anthropic` — upstream catalog at `anthropic-skills/skills` (pinned via flake input).
 - `orbal` — local repo catalog at `./skills/`. Skills land at `~/.claude/skills/<skill-id>/` alongside upstream ones; Claude Code's loader only looks one level deep under `skills/`, so we can't use `idPrefix` to namespace them without hiding the skill. If a local ID collides with an upstream one, rename the local directory.
@@ -27,28 +31,36 @@ Two sources are registered in `modules/claude.nix`:
 In `hosts/forge/default.nix`:
 
 ```nix
-orbal.claude = {
-  enable = true;
-  agentSkills = {
-    enable = true;
-    skills = [ "skill-creator" "mcp-builder" "claude-api" "commit-smart" "onboard-host" "skill-review" "skill-optimize" ];
-  };
-};
+orbal.agents.claude.enable = true;
 ```
 
-- `skill-creator` — scaffolds new SKILL.md directories.
-- `mcp-builder` — helpers for authoring MCP servers.
-- `claude-api` — Anthropic SDK reference material.
-- `commit-smart` — local skill: analyzes staged changes and writes conventional commits.
-- `onboard-host` — local skill: inspects a new machine, scaffolds `hosts/<name>/`, deploys, commits, and stubs the wiki. See `/onboard-host` usage in `skills/onboard-host/SKILL.md`.
-- `skill-review` — local skill: grades a SKILL.md against the Tessl rubric (validation checks + Activation + Content scores). See `/skill-review` usage in `skills/skill-review/SKILL.md`.
-- `skill-optimize` — local skill: iteratively rewrites a SKILL.md to raise its review score, with per-iteration diff + confirmation. See `/skill-optimize` usage in `skills/skill-optimize/SKILL.md`.
+That one toggle brings in the default skill bundle; `commit-smart` also flows in because forge has `orbal.dev.enable = true`. Resolved list on forge:
+
+- `skill-creator` — scaffolds new SKILL.md directories. *(default bundle — `agents.nix`)*
+- `mcp-builder` — helpers for authoring MCP servers. *(default bundle — `agents.nix`)*
+- `claude-api` — Anthropic SDK reference material. *(default bundle — `agents.nix`)*
+- `onboard-host` — local skill: inspects a new machine, scaffolds `hosts/<name>/`, deploys, commits, and stubs the wiki. See `/onboard-host` usage in `skills/onboard-host/SKILL.md`. *(default bundle — `agents.nix`)*
+- `skill-review` — local skill: grades a SKILL.md against the Tessl rubric (validation checks + Activation + Content scores). See `/skill-review` usage in `skills/skill-review/SKILL.md`. *(default bundle — `agents.nix`)*
+- `skill-optimize` — local skill: iteratively rewrites a SKILL.md to raise its review score, with per-iteration diff + confirmation. See `/skill-optimize` usage in `skills/skill-optimize/SKILL.md`. *(default bundle — `agents.nix`)*
+- `commit-smart` — local skill: analyzes staged changes and writes conventional commits. *(contributed by `dev.nix` when an agent is also enabled)*
+
+Verify the resolved list on any host:
+
+```sh
+nix eval .#nixosConfigurations.<host>.config.orbal.agents.skills.list
+```
 
 ## Adding an upstream skill
 
-1. List what's available in the upstream catalog: `gh api repos/anthropics/skills/contents/skills --jq '.[] | select(.type=="dir") | .name'`.
-2. Append the ID to `orbal.claude.agentSkills.skills` in the host config (e.g. `hosts/forge/default.nix`).
-3. Rebuild: `rebuild switch`.
+Decide where the skill should come from:
+
+- **Bundle with all agents by default** — append the ID to the default list in `modules/agents.nix` (the `mkIf cfg.anyEnabled` block). Every host with any agent enabled picks it up.
+- **Bundle only when another module is enabled** — in that module (e.g. `modules/dev.nix`), add a `mkIf (cfg.enable && config.orbal.agents.anyEnabled)` block that appends to `orbal.agents.skills.list`.
+- **Host-level extra** — append directly in the host config: `orbal.agents.skills.list = [ "<skill-id>" ];`. Nix merges list definitions automatically.
+
+Then `rebuild switch`.
+
+List what's available upstream: `gh api repos/anthropics/skills/contents/skills --jq '.[] | select(.type=="dir") | .name'`.
 
 To pin a different catalog, add a new input in `flake.nix` and register it as an additional source (`sources.<name>.input = "<input-name>";`). Claude Code's skill loader only discovers skills one level deep under `~/.claude/skills/`, so `idPrefix` can't be used to namespace colliding IDs — rename one side instead.
 
@@ -58,7 +70,7 @@ Local skills live under `./skills/<skill-id>/SKILL.md` at the repo root and are 
 
 1. `mkdir skills/<skill-id>` and write `SKILL.md` with the `name` / `description` frontmatter (see `skills/commit-smart/SKILL.md` for a reference).
 2. `git add skills/<skill-id>/SKILL.md` — flake sources only include Git-tracked files, so untracked skills won't make it into the store.
-3. Append `"<skill-id>"` to `orbal.claude.agentSkills.skills` in the host config.
+3. Wire it into a module (or a host's `orbal.agents.skills.list`) using the same placement rules as upstream skills above.
 4. Rebuild: `rebuild switch`.
 
 ## Updating the catalog
@@ -70,7 +82,7 @@ rebuild switch
 
 ## Uninstall
 
-Set `orbal.claude.agentSkills.enable = false;` and rebuild — home-manager's activation script clears the rsync-managed tree. To drop the integration entirely, remove `orbal.claude.agentSkills` from the host config; to also drop the inputs, remove `agent-skills` and `anthropic-skills` from `flake.nix`.
+Set `orbal.agents.skills.enable = false;` and rebuild — home-manager's activation script clears the rsync-managed tree. The agent CLI stays installed. To remove both, set `orbal.agents.claude.enable = false;` too. To drop the integration entirely, remove the `orbal.agents` block from the host config; to also drop the inputs, remove `agent-skills` and `anthropic-skills` from `flake.nix`.
 
 ## Diagnostics
 
