@@ -38,6 +38,14 @@
     models = [ "llama3.2:3b" ];
   };
 
+  orbal.reverseProxy = {
+    enable = true;
+    services = {
+      ollama.port = 11434; # matches orbal.local-llm.port default
+      webui.port  = 8080;  # matches orbal.local-llm.webui.port default
+    };
+  };
+
   networking.firewall.allowedTCPPorts = [
     22 # SSH (already open via base, explicit for clarity)
   ];

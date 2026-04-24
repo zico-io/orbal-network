@@ -59,4 +59,16 @@
    nixos-rebuild switch --flake .#<hostname> --target-host <hostname>
    ```
 
-7. **Update the wiki**: Add hardware specs and update network topology.
+7. **Register the host's tailnet IP** so `.orbal` DNS resolves for it:
+   - On the new host (or any tailnet node): `tailscale status` to read its IPv4.
+   - Append to `orbal.tailnetHosts` in `modules/tailnet-hosts.nix`:
+     ```nix
+     <hostname> = "100.x.y.z";
+     ```
+   - Rebuild seed so dnsmasq picks up the new record:
+     ```bash
+     nixos-rebuild switch --flake .#seed --target-host seed
+     ```
+   - Optionally opt the new host into `orbal.reverseProxy` to expose its services as `<service>.<hostname>.orbal`. See [Reverse proxy](../services/reverse-proxy.md).
+
+8. **Update the wiki**: Add hardware specs and update network topology.

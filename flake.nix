@@ -54,6 +54,9 @@
           ./modules/languages.nix
           ./modules/claude.nix
           ./modules/local-llm.nix
+          ./modules/tailnet-hosts.nix
+          ./modules/reverse-proxy.nix
+          ./modules/dns-resolver.nix
           ./modules/dev.nix
           sops-nix.nixosModules.sops
           disko.nixosModules.disko

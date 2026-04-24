@@ -33,6 +33,9 @@ Secrets (API keys, tokens) are managed with sops-nix. Encrypted files live in th
 | `languages.nix` | `orbal.languages.{node,go,rust,python}.enable` | language toolchains |
 | `claude.nix` | `orbal.claude.enable`, `.agentSkills.enable` | claude-code CLI + optional agent-skills-nix |
 | `local-llm.nix` | `orbal.local-llm.enable`, `.webui.enable` | Ollama server + optional Open WebUI, tailscale-only, declarative pre-pull |
+| `tailnet-hosts.nix` | always-on | shared `orbal.tailnetHosts` map (hostname → tailnet IPv4), consumed by the DNS resolver |
+| `reverse-proxy.nix` | `orbal.reverseProxy.enable` | per-host Caddy exposing services as `<service>.<host>.orbal`, tailnet-only, plain HTTP |
+| `dns-resolver.nix` | `orbal.dnsResolver.enable` | dnsmasq authoritative for `.orbal`, tailnet-only; runs on seed today |
 | `dev.nix` | `orbal.dev.enable` | meta — turns on secrets/shell/cli/git/tmux/editor |
 | `containers.nix`, `vm-guest.nix` | — | host-role specifics |
 

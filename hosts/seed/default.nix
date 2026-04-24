@@ -43,5 +43,7 @@
 
   security.sudo.wheelNeedsPassword = false;
 
+  orbal.dnsResolver.enable = true;
+
   system.stateVersion = "25.05";
 }

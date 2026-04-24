@@ -12,6 +12,7 @@
 - [tmux](services/tmux.md)
 - [Agent Skills](services/agent-skills.md)
 - [Local LLM (Ollama)](services/local-llm.md)
+- [Reverse proxy & .orbal DNS](services/reverse-proxy.md)
 
 ## Runbooks
 - [First Deploy](runbooks/first-deploy.md)
@@ -24,3 +25,4 @@
 ## Decision Log
 - [001: Podman over Docker](decisions/001-podman-over-docker.md)
 - [002: Flake Structure](decisions/002-flake-structure.md)
+- [003: .orbal Split-DNS](decisions/003-orbal-split-dns.md)
