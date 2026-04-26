@@ -21,7 +21,13 @@
       options = [ "fmask=0022" "dmask=0022" ];
     };
 
-  swapDevices = [ ];
+  swapDevices = [{
+    device = "/var/lib/swapfile";
+    size = 8 * 1024; # 8 GiB — overflow for tsc spikes on large monorepos
+  }];
+
+  # Keep swap as a last resort; normal workloads stay in RAM.
+  boot.kernel.sysctl."vm.swappiness" = 10;
 
   networking.useDHCP = lib.mkDefault true;
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
