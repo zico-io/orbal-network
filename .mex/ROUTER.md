@@ -24,7 +24,7 @@ edges:
     condition: when starting a task — check the pattern index for a matching pattern file
   - target: patterns/runbooks/
     condition: when running an operational procedure (first deploy, rebuild, disaster recovery, forge VM, new host, nixos-infect)
-last_updated: 2026-04-24
+last_updated: 2026-04-25
 ---
 
 # Session Bootstrap
@@ -37,7 +37,9 @@ Then read this file fully before doing anything else in this session.
 **Working:**
 - Flake builds two hosts: `forge` (TrueNAS Scale dev VM) and `seed` (Hetzner Robot dedicated).
 - Core shared modules: base, users, secrets (sops-nix), shell, cli, git, tmux, editor, languages, agents, local-llm, tailnet-hosts, reverse-proxy, dns-resolver, dev, containers, vm-guest.
-- Sops-encrypted secrets via `secrets/dev.yaml` and `.sops.yaml` recipient rules.
+- `modules/languages.nix` now includes `orbal.languages.typescript.enable` (tsc + typescript-language-server).
+- `devShells.x86_64-linux.bask` added to flake: bun + typescript + typescript-language-server + pnpm_8.
+- Sops-encrypted secrets via `secrets/dev.yaml` and `.sops.yaml` recipient rules. (`github_token` removed; GitHub auth now via `gh auth login` — `gh` wired in `modules/cli.nix` with git credential helper enabled.)
 - Overlays wired through `overlays/default.nix`.
 - Local agent skills wired onto hosts via `modules/agents.nix` when `orbal.agents.skills` is enabled (source in `.mex/skills/`).
 - Single agent tree: `.mex/` absorbs the former `wiki/` **and** the former top-level `skills/` — runbooks live under `.mex/patterns/runbooks/`, services under `.mex/context/services/`, hardware under `.mex/context/hardware/`, network under `.mex/context/network.md`, decisions (including ADR-001/002/003) in `.mex/context/decisions.md`, local Claude skills under `.mex/skills/`.

@@ -37,6 +37,7 @@
   outputs = { self, nixpkgs, home-manager, sops-nix, disko, claude-code, agent-skills, anthropic-skills, ... }@inputs:
     let
       system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
 
       mkHost = hostname: nixpkgs.lib.nixosSystem {
         inherit system;
@@ -78,6 +79,15 @@
         # elitedesk-1 = mkHost "elitedesk-1";
         # elitedesk-2 = mkHost "elitedesk-2";
         # elitedesk-3 = mkHost "elitedesk-3";
+      };
+
+      devShells.${system}.bask = pkgs.mkShell {
+        packages = with pkgs; [
+          bun
+          typescript
+          typescript-language-server
+          pnpm_8
+        ];
       };
     };
 }
