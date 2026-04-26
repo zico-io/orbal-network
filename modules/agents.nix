@@ -48,6 +48,7 @@ in
         "onboard-host"
         "skill-review"
         "skill-optimize"
+        "code-simplifaction"
       ];
     })
 
