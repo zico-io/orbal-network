@@ -1,6 +1,8 @@
 ---
-name: code-simplification
-description: Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.
+name: code-simplifaction
+description: Simplifies code for readability without changing behavior — extracts over-nested logic, renames vague identifiers, eliminates duplication, and removes unearned abstractions. Use when the user asks to "simplify", "clean up", "refactor for clarity", "reduce complexity", or says the code is "too complex", "hard to read", or "hard to follow". Use when refactoring after a feature ships, during code review for readability issues, or when consolidating logic scattered across files. Not for performance optimization, new features, or full rewrites.
+
+Usage - /code-simplifaction, /code-simplifaction src/auth.ts, /code-simplifaction "this function is too long"
 ---
 
 # Code Simplification
