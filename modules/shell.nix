@@ -39,7 +39,6 @@ in
           ignoreSpace = true;
         };
         initContent = ''
-          [ -r /run/secrets/github_token ] && export GITHUB_TOKEN="$(cat /run/secrets/github_token)"
           autoload -U promptinit && promptinit
           prompt pure
         '';
@@ -47,11 +46,6 @@ in
 
       programs.nushell = {
         enable = true;
-        envFile.text = ''
-          if ('/run/secrets/github_token' | path exists) {
-            $env.GITHUB_TOKEN = (open --raw /run/secrets/github_token | str trim)
-          }
-        '';
       };
 
       programs.direnv = {
